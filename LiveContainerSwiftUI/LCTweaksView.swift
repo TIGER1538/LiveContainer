@@ -308,10 +308,9 @@ struct LCTweakFolderView : View {
             if !llvmOtoolOuts.isEmpty {
                 llvmOtoolOuts += "\n"
             }
-            //llvmOtoolOuts += item.fileUrl.lastPathComponent
-            llvmOtoolOuts += item.fileUrl
+            llvmOtoolOuts += item.fileUrl.lastPathComponent
             llvmOtoolOuts += ":\n"
-            //llvmOtoolOuts += LCObjcBridge.showMachOFileInfo(filePath: item.fileUrl.absoluteString)
+            llvmOtoolOuts += LCObjcBridge.showMachOFileInfo(filePath: item.fileUrl.path)
         }
     }
 
