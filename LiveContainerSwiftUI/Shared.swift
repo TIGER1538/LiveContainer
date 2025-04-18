@@ -144,9 +144,11 @@ extension String: @retroactive LocalizedError {
     }()
     
     var loc: String {
-        let message = NSLocalizedString(self, comment: "")
-        if message != self {
-            return message
+        if !UserDefaults.standard.bool(forKey: "LCForceToUseEnglish") {
+            let message = NSLocalizedString(self, comment: "")
+            if message != self {
+                return message
+            }
         }
 
         if let forcedString = String.enBundle?.localizedString(forKey: self, value: nil, table: nil){
