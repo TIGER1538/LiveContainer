@@ -3756,7 +3756,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Forece to use English"
+            "value" : "use English"
           }
         },
         "ja" : {
@@ -3773,13 +3773,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Use English as the default language in LiveContainer."
+            "value" : "Use English as the default language in LiveContainerUI."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LiveContainerでの言語設定を英語に強制します。"
+            "value" : "LiveContainer内での言語設定を英語に強制します。"
           }
         }
       }
