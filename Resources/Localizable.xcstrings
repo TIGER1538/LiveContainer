@@ -3756,13 +3756,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "use English"
+            "value" : "Use English"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "英語を言語として設定"
+            "value" : "英語をデフォルト言語として設定"
           }
         }
       }
