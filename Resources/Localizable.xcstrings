@@ -3733,6 +3733,57 @@
         }
       }
     },
+    "lc.settings.forceToUseEnglishTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "言語設定"
+          }
+        }
+      }
+    },
+    "lc.settings.forceToUseEnglishButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forece to use English"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "英語を言語として設定"
+          }
+        }
+      }
+    },
+    "lc.settings.forceToUseEnglishDesc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use English as the default language in LiveContainer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LiveContainerでの言語設定を英語に強制します。"
+          }
+        }
+      }
+    },
     "lc.common.auto" : {
       "extractionState" : "manual",
       "localizations" : {
