@@ -143,7 +143,6 @@ extension String: @retroactive LocalizedError {
         return bundle
     }()
 
-    private let userDefaultsAppGroup = UserDefaults.init(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard
     var loc: String {
         if !((UserDefaults.init(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).bool(forKey: "LCForceToUseEnglish")) {
             let message = NSLocalizedString(self, comment: "")
