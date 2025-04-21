@@ -194,7 +194,7 @@ struct LCAppBanner : View {
                         List{
                             ForEach(model.uiContainers.indices, id:\.self) { i in
                                 Button {
-                                    openSafariViewTocreateAppClip(model.uiContainers[i].name)
+                                    openSafariViewToCreateAppClip(model.uiContainers[i].name)
                                 } label: {
                                     Text(model.uiContainers[i].name)
                                 }
@@ -421,7 +421,7 @@ struct LCAppBanner : View {
 
     }
     */
-    func openSafariViewTocreateAppClip(containerId: String?) {
+    func openSafariViewToCreateAppClip(containerId: String?) {
         if let _containerId = containerId {
             do {
                 let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: _containerId)!, format: .xml, options: 0)
