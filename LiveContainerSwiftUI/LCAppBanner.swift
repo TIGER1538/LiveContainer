@@ -186,9 +186,22 @@ struct LCAppBanner : View {
                 
                 Menu {
                     Button {
-                        openSafariViewToCreateAppClip()
+                        openSafariViewToCreateAppClip(containerId: nil)
                     } label: {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
+                    }
+                    Menu {
+                        List{
+                            ForEach(model.uiContainers.indices, id:\.self) { i in
+                                Button {
+                                    openSafariViewTocreateAppClip(model.uiContainers[i].name)
+                                } label: {
+                                    Text(model.uiContainers[i].name)
+                                }
+                            }
+                        }
+                    } label: {
+                        Label("lc.appBanner.createAppClipWithCustomContainerId".loc, systemImage: "appclip")
                     }
                     Button {
                         copyLaunchUrl()
@@ -396,7 +409,7 @@ struct LCAppBanner : View {
         }
         
     }
-    
+    /*
     func openSafariViewToCreateAppClip() {
         do {
             let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
@@ -406,6 +419,26 @@ struct LCAppBanner : View {
             errorInfo = error.localizedDescription
         }
 
+    }
+    */
+    func openSafariViewTocreateAppClip(containerId: String?) {
+        if let _containerId = containerId {
+            do {
+                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: _containerId)!, format: .xml, options: 0)
+                delegate.installMdm(data: data)
+            } catch  {
+                errorShow = true
+                errorInfo = error.localizedDescription
+            }
+        } else {
+            do {
+                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
+                delegate.installMdm(data: data)
+            } catch  {
+                errorShow = true
+                errorInfo = error.localizedDescription
+            }
+        }
     }
     
     func saveIcon() {
