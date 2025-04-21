@@ -191,7 +191,7 @@ struct LCAppBanner : View {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
                     }
                     //Menu {
-                        List{
+                    //    List{
                             ForEach(model.uiContainers.indices, id:\.self) { i in
                                 Button {
                                     openSafariViewToCreateAppClip(model.uiContainers[i].name)
@@ -199,9 +199,9 @@ struct LCAppBanner : View {
                                     Text("Create with %@", model.uiContainers[i].name)
                                 }
                             }
-                        }
+                    //    }
                     //} label: {
-                        //Label("lc.appBanner.createAppClipWithCustomContainerId".loc, systemImage: "appclip")
+                    //    Label("lc.appBanner.createAppClipWithCustomContainerId".loc, systemImage: "appclip")
                     //}
                     Button {
                         copyLaunchUrl()
