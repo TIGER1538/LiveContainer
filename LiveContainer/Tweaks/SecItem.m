@@ -79,7 +79,7 @@ void SecItemGuestHooksInit()  {
     NSDictionary* infoDict = [NSDictionary dictionaryWithContentsOfFile:containerInfoPath];
     int keychainGroupId = [infoDict[@"keychainGroupId"] intValue];
     NSString* groupId;
-    if([NSUserDefaults.lcUserDefaults boolForKey:@"LCCertificateImported"]) {
+    if([NSUserDefaults.lcUserDefaults stringForKey:@"LCCertificateTeamId"]) {
         groupId = [NSUserDefaults.lcUserDefaults stringForKey:@"LCCertificateTeamId"];
     } else {
         groupId = [[NSUserDefaults.lcMainBundle.bundleIdentifier componentsSeparatedByString:@"."] lastObject];

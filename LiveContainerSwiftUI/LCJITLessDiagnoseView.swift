@@ -352,7 +352,7 @@ struct LCJITLessDiagnoseView : View {
             return;
         }
         
-        if !sharedModel.certificateImported && !isPatchDetected {
+        if !sharedModel.certificateImported && !certificateDataFound {
             errorInfo = "lc.settings.error.storeNotPatched %@".localizeWithFormat(storeName)
             errorShow = true
             return;

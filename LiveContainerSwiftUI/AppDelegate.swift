@@ -11,6 +11,10 @@ import SwiftUI
     private static var containerToLaunch: String? = nil
     private static var launchAppFunc: ((String, String?) async -> Void)?
     
+    private static var certData: Data? = nil
+    private static var certPassword: String? = nil
+    private static var importSideStoreCertFunc: ((Data, String) async -> Void)?
+    
     public static func setOpenUrlStrFunc(handler: @escaping ((String) async -> Void)){
         self.openUrlStrFunc = handler
         if let urlStrToOpen = self.urlStrToOpen {
@@ -38,6 +42,14 @@ import SwiftUI
         }
     }
     
+    public static func setImportSideStoreCertFunc(handler: @escaping ((Data, String) async -> Void)){
+        self.importSideStoreCertFunc = handler
+        if let certData, let certPassword {
+            Task { await handler(certData, certPassword) }
+            self.bundleToLaunch = nil
+        }
+    }
+    
     private static func openWebPage(urlStr: String) {
         if openUrlStrFunc == nil {
             urlStrToOpen = urlStr
@@ -60,6 +72,15 @@ import SwiftUI
             installUrl = urlStr
         } else {
             Task { await installFromUrlStrFunc!(urlStr) }
+        }
+    }
+    
+    private static func importSideStoreCert(certData: Data, password: String) {
+        if importSideStoreCertFunc == nil {
+            self.certData = certData
+            self.certPassword = password
+        } else {
+            Task { await importSideStoreCertFunc!(certData, password) }
         }
     }
     
@@ -118,6 +139,17 @@ import SwiftUI
                 if let installUrl {
                     AppDelegate.installAppFromUrl(urlStr: installUrl)
                 }
+            }
+        } else if url.host == "certificate" {
+            if let components = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                let queryItems = components.queryItems?.reduce(into: [String: String]()) { $0[$1.name.lowercased()] = $1.value } ?? [:]
+                guard let encodedCert = queryItems["cert"]?.removingPercentEncoding,
+                      let password = queryItems["password"],
+                      let certData = Data(base64Encoded: encodedCert)
+                else { return false }
+
+                AppDelegate.importSideStoreCert(certData: certData, password: password)
+                
             }
         }
         

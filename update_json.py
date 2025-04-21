@@ -67,7 +67,7 @@ def update_json_file(json_file, latest_release):
     download_url = None
     size = None
     for asset in assets:
-        if asset["name"] == f"com.kdt.livecontainer_{version}.ipa":
+        if asset["name"] == f"LiveContainer.ipa":
             download_url = asset["browser_download_url"]
             size = asset["size"]
             break

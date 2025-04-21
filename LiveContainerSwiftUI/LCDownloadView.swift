@@ -18,10 +18,15 @@ public final class DownloadHelper : ObservableObject {
     
     func download(url: URL, to: URL) async throws {
         var ansError: Error? = nil
-        cancelled = false
-        
+
         await MainActor.run {
-            self.isDownloading = true
+            cancelled = false
+            
+            downloadProgress = 0.0
+            downloadedSize = 0
+            totalSize = 0
+            
+            isDownloading = true
         }
         
         await withUnsafeContinuation { c in

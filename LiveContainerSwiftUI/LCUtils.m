@@ -169,9 +169,9 @@ Class LCSharedUtilsClass = nil;
             return;
         }
         
-        if([[self appGroupID] containsString:@"AltStore"]) {
+        if([[self appGroupID] containsString:@"AltStore"] && ![[self appGroupID] isEqualToString:@"group.com.rileytestut.AltStore"]) {
             ans = AltStore;
-        } else if ([[self appGroupID] containsString:@"SideStore"]) {
+        } else if ([[self appGroupID] containsString:@"SideStore"] && ![[self appGroupID] isEqualToString:@"group.com.SideStore.SideStore"]) {
             ans = SideStore;
         } else {
             ans = Unknown;
@@ -245,19 +245,19 @@ Class LCSharedUtilsClass = nil;
     if (*error) return nil;
 
     NSFileManager *manager = NSFileManager.defaultManager;
-    NSURL *appGroupPath = [NSFileManager.defaultManager containerURLForSecurityApplicationGroupIdentifier:self.appGroupID];
-    NSURL *bundlePath = [appGroupPath URLByAppendingPathComponent:@"Apps/com.kdt.livecontainer"];
+    NSURL *bundlePath = NSBundle.mainBundle.bundleURL;
 
-    NSURL *tmpPath = [appGroupPath URLByAppendingPathComponent:@"tmp"];
-    [manager removeItemAtURL:tmpPath error:nil];
+    NSURL *tmpPath = manager.temporaryDirectory;
 
-    NSURL *tmpPayloadPath = [tmpPath URLByAppendingPathComponent:@"Payload"];
-    NSURL *tmpIPAPath = [appGroupPath URLByAppendingPathComponent:@"tmp.ipa"];
-
-    [manager createDirectoryAtURL:tmpPath withIntermediateDirectories:YES attributes:nil error:error];
+    NSURL *tmpPayloadPath = [tmpPath URLByAppendingPathComponent:@"LiveContainer2/Payload"];
+    [manager removeItemAtURL:tmpPayloadPath error:nil];
+    [manager createDirectoryAtURL:tmpPayloadPath withIntermediateDirectories:YES attributes:nil error:error];
     if (*error) return nil;
+    
+    NSURL *tmpIPAPath = [tmpPath URLByAppendingPathComponent:@"LiveContainer2.ipa"];
+    
 
-    [manager copyItemAtURL:bundlePath toURL:tmpPayloadPath error:error];
+    [manager copyItemAtURL:bundlePath toURL:[tmpPayloadPath URLByAppendingPathComponent:@"App.app"] error:error];
     if (*error) return nil;
     
     NSURL *infoPath = [tmpPayloadPath URLByAppendingPathComponent:@"App.app/Info.plist"];
@@ -277,6 +277,45 @@ Class LCSharedUtilsClass = nil;
     NSURL* execFromPath = [appBundlePath URLByAppendingPathComponent:infoDict[@"CFBundleExecutable"]];
     infoDict[@"CFBundleExecutable"] = @"LiveContainer_PleaseDoNotShortenTheExecutableNameBecauseItIsUsedToReserveSpaceForOverwritingThankYou2";
     NSURL* execToPath = [appBundlePath URLByAppendingPathComponent:infoDict[@"CFBundleExecutable"]];
+    
+    // we remove the teamId after app group id so it can be correctly signed by AltSign. We don't touch application-identifier or team-id since most signer can handle them correctly otherwise the app won't launch at all
+    __block NSError* parseExecError = nil;
+    LCParseMachO(execFromPath.path.UTF8String, false, ^(const char *path, struct mach_header_64 *header, int fd, void *filePtr) {
+        void* entitlementXMLPtr = 0;
+        NSString* entitlementXML = getEntitlementXML(header, &entitlementXMLPtr);
+        NSData *plistData = [entitlementXML dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dict = [NSPropertyListSerialization propertyListWithData:plistData
+                                                                       options:NSPropertyListImmutable
+                                                                        format:nil
+                                                                         error:&parseExecError];
+        if(parseExecError) {
+            return;
+        }
+        
+        NSString* teamId = dict[@"com.apple.developer.team-identifier"];
+        if(![teamId isKindOfClass:NSString.class]) {
+            parseExecError = [NSError errorWithDomain:@"archiveIPAWithBundleName" code:-1 userInfo:@{NSLocalizedDescriptionKey:@"com.apple.developer.team-identifier is not a string!"}];
+            return;
+        }
+        infoDict[@"PrimaryLiveContainerTeamId"] = teamId;
+        NSArray* appGroupsToFind = @[
+            @"group.com.SideStore.SideStore",
+            @"group.com.rileytestut.AltStore",
+        ];
+        for(NSString* appGroup in appGroupsToFind) {
+            NSRange range = [entitlementXML rangeOfString:[NSString stringWithFormat:@"%@.%@", appGroup, teamId]];
+            if(range.location == NSNotFound) {
+                continue;
+            }
+            void* appGroupStrPtr = entitlementXMLPtr + range.location + appGroup.length;
+            if(memcmp(appGroupStrPtr + 1, teamId.UTF8String, 10) != 0) {
+                NSLog(@"App group id does not have prefix!");
+            }
+            memcpy(appGroupStrPtr, "</string>           ", 20);
+            
+        }
+        
+    });
     
     [manager moveItemAtURL:execFromPath toURL:execToPath error:error];
     if (*error) {
@@ -303,7 +342,7 @@ Class LCSharedUtilsClass = nil;
     NSData *zipData = [[NSClassFromString(@"PKZipArchiver") new] zippedDataForURL:tmpPayloadPath.URLByDeletingLastPathComponent];
     if (!zipData) return nil;
 
-    [manager removeItemAtURL:tmpPath error:error];
+    [manager removeItemAtURL:tmpPayloadPath error:error];
     if (*error) return nil;
     
     if([manager fileExistsAtPath:tmpIPAPath.path]) {

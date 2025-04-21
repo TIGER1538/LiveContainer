@@ -14,6 +14,7 @@ void LCPatchExecSlice(const char *path, struct mach_header_64 *header, bool doIn
 void LCPatchLibrary(const char *path, struct mach_header_64 *header);
 void LCChangeExecUUID(struct mach_header_64 *header);
 void LCPatchAltStore(const char *path, struct mach_header_64 *header);
+NSString* getEntitlementXML(struct mach_header_64* header, void** entitlementXMLPtrOut);
 NSString* getLCEntitlementXML(void);
 bool checkCodeSignature(const char* path);
 void refreshFile(NSString* execPath);

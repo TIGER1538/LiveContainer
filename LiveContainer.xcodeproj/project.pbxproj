@@ -154,13 +154,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		172CA8BE2D9D74B700CF6989 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 17DCE99B2C7067EC00731D42 /* Resources */;
-			membershipExceptions = (
-				Frameworks/CydiaSubstrate.framework,
-			);
-		};
 		172CA8C32D9D76AD00CF6989 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			attributesByRelativePath = {
@@ -184,7 +177,7 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		172CA8992D9D72C300CF6989 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (172CA8BD2D9D74B700CF6989 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 172CA8BE2D9D74B700CF6989 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 172CA8C32D9D76AD00CF6989 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+		172CA8992D9D72C300CF6989 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (172CA8BD2D9D74B700CF6989 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 172CA8C32D9D76AD00CF6989 /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
 		172CA8A02D9D73D800CF6989 /* Tweaks */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Tweaks; sourceTree = "<group>"; };
 		172CA8AD2D9D741F00CF6989 /* fishhook */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (172CA8B42D9D74A700CF6989 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = fishhook; sourceTree = "<group>"; };
 		17413FB62D9C0BAE00F3F928 /* LiveContainerSwiftUI */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = LiveContainerSwiftUI; sourceTree = "<group>"; };

@@ -22,17 +22,33 @@ extern NSBundle *lcMainBundle;
     dispatch_once(&once, ^{
         NSArray* possibleAppGroups = @[
             [@"group.com.SideStore.SideStore." stringByAppendingString:[self teamIdentifier]],
-            [@"group.com.rileytestut.AltStore." stringByAppendingString:[self teamIdentifier]]
+            [@"group.com.rileytestut.AltStore." stringByAppendingString:[self teamIdentifier]],
+            @"group.com.SideStore.SideStore",
+            @"group.com.rileytestut.AltStore"
         ];
-
+        
+        // we prefer app groups with "Apps" in it, which indicate this app group is actually used by the store.
         for (NSString *group in possibleAppGroups) {
             NSURL *path = [NSFileManager.defaultManager containerURLForSecurityApplicationGroupIdentifier:group];
+            if(!path) {
+                continue;
+            }
             NSURL *bundlePath = [path URLByAppendingPathComponent:@"Apps"];
             if ([NSFileManager.defaultManager fileExistsAtPath:bundlePath.path]) {
                 // This will fail if LiveContainer is installed in both stores, but it should never be the case
                 appGroupID = group;
                 return;
             }
+        }
+        
+        // if no "Apps" is found, we choose a valid group
+        for (NSString *group in possibleAppGroups) {
+            NSURL *path = [NSFileManager.defaultManager containerURLForSecurityApplicationGroupIdentifier:group];
+            if(!path) {
+                continue;
+            }
+            appGroupID = group;
+            return;
         }
     });
     return appGroupID;

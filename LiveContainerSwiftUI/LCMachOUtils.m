@@ -209,8 +209,7 @@ struct code_signature_command* findSignatureCommand(struct mach_header_64* heade
     return codeSignCommand;
 }
 
-NSString* getLCEntitlementXML(void) {
-    struct mach_header_64* header = dlsym(RTLD_MAIN_ONLY, MH_EXECUTE_SYM);
+NSString* getEntitlementXML(struct mach_header_64* header, void** entitlementXMLPtrOut) {
     struct code_signature_command* codeSignCommand = findSignatureCommand(header);
 
     if(!codeSignCommand) {
@@ -239,6 +238,10 @@ NSString* getLCEntitlementXML(void) {
     int32_t xmlLength = OSSwapInt32(entitlementBlob->length) - sizeof(struct ui_CS_blob);
     void* xmlPtr = (void*)entitlementBlob + sizeof(struct ui_CS_blob);
     
+    if(entitlementXMLPtrOut) {
+        *entitlementXMLPtrOut = xmlPtr;
+    }
+
     // entitlement xml in executable don't have \0 so we have to copy it first
     char* xmlString = malloc(xmlLength + 1);
     memcpy(xmlString, xmlPtr, xmlLength);
@@ -287,4 +290,17 @@ bool checkCodeSignature(const char* path) {
         }
     });
     return ans;
+}
+
+NSString* getLCEntitlementXML(void) {
+#if DEBUG
+    __block NSString* ans = @"Failed to find main executable?";
+    // it seems the debug build messes the code signature region up, so we search the executable file on the disk instead.
+    LCParseMachO(NSBundle.mainBundle.executablePath.UTF8String, true, ^(const char *path, struct mach_header_64 *header, int fd, void *filePtr) {
+        ans = getEntitlementXML(header, 0);
+    });
+    return ans;
+#else
+    return getEntitlementXML(dlsym(RTLD_MAIN_ONLY, MH_EXECUTE_SYM), 0);
+#endif
 }

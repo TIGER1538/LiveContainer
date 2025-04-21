@@ -1,23 +1,48 @@
+<div align="center">
+   <img width="217" height="217" src="./screenshots/livecontainer_icon.png" alt="Logo">
+</div>
+   
+
+<div align="center">
+  <h1><b>LiveContainer</b></h1>
+  <p><i>An app launcher that runs iOS app without actually installing it! </i></p>
+</div>
+<h6 align="center">
+
+[![Crowdin](https://badges.crowdin.net/livecontainer/localized.svg)](https://crowdin.com/project/livecontainer)
+
 # LiveContainer
-Run iOS app without actually installing it!
+
+- LiveContainer is an app launcher (not emulator or hypervisor) that allows you to run app inside it.
 - Allows you to install unlimited apps (10 apps limit of free developer account do not apply here!), have multiple versions of an app installed and multiple data containers.
 - When JIT is available, codesign is entirely bypassed, no need to sign your apps before installing. Otherwise, app will be signed with the same certificate used by LiveContainer.
 
 >[!Note]
 It’s recommended to follow the following steps to set up JIT-Less mode for using LiveContainer without JIT. If you encounter any issues, please review #265 first before reporting them.
 
-## Compatibility
-Unfortunately, not all apps work in LiveContainer, so we have a [compatibility list](https://github.com/khanhduytran0/LiveContainer/labels/compatibility) to tell if there is apps that have issues. If they aren't on this list, then it's likely going run. However, if it doesn't work, please make an [issue](https://github.com/khanhduytran0/LiveContainer/issues/new/choose) about it.
-
 ## Usage
 Requires AltStore or SideStore
-- Build from source or get prebuilt ipa in [the Actions tab](https://github.com/khanhduytran0/LiveContainer/actions)
+- Download the latest version [here](https://github.com/LiveContainer/LiveContainer/releases/latest) or download the latest nightly version [here](https://github.com/LiveContainer/LiveContainer/releases/tag/nightly)
+- It is recommended to setup JIT-Less mode, in which LiveContainer signs your apps with certificate from SideStore/AltStore, see the instructions below.
 - Open LiveContainer, tap the plus icon in the upper right hand corner and select IPA files to install.
 - Choose the app you want to open in the next launch.
 - You can long-press the app to manage it.
 
-### Without JIT
-Without JIT, guest apps need to be codesigned, which requires retrieving the certificate and password from SideStore or AltStore. This process involves applying a tweak to SideStore/AltStore, allowing it to expose the certificate to LiveContainer.
+### JIT-Less mode (Without JIT)
+Without JIT, guest apps need to be codesigned, which requires retrieving the certificate and password from SideStore or AltStore. 
+>[!Note] 
+JIT-Less mode does not mean you can't enable JIT for your apps. Instead, it means JIT is not required to launch an app. If you want to use JIT, see the instructions below in "JIT Support" section. 
+If something goes wrong, please check "JIT-Less Mode Diagnose" for more information.
+
+#### Method 1 (Requires SideStore 0.6.2-20250420.25+)
+- Open Settings in LiveContainer 
+- Tap "Import Certificate from SideStore"
+- SideStore will be opened and ask if you want to export the certificate. If you don't see the prompt, keep SideStore open in the background and tap "Import Certificate from SideStore" again.
+- Press "Export"
+- Tap "JIT-Less Mode Diagnose" and tap "Test JIT-Less Mode"
+- If it says "JIT-Less Mode Test Passed", you are good to go!
+
+#### Method 2 (Requires AltStore/SideStore)
 - Open Settings in LiveContainer, tap "Patch SideStore/AltStore", and the app will switch to SideStore/AltStore to reinstall it with the tweak applied. If you use AltWidget, select "Keep Extension."
 - Wait for the installation to finish, then **reopen SideStore/AltStore**.
 - Return to LiveContainer and press "Test JIT-Less Mode." If it says "Test Passed," JIT-less mode is ready.
@@ -52,10 +77,7 @@ Some apps may experience issues with their file pickers or not be able to apply 
 - What's more, you can share a web page to LiveContainer using [this shortcut](https://www.icloud.com/shortcuts/44ea82ce7ed8469ea24198c375db09a0). Be sure to add this shortcut to "Favorites" in share sheet actions.
 
 ### JIT Support
-To enable JIT for a guest app:
-- Enter your SideJITServer/JITStreamer address and device UDID in LiveContainer settings.
-- Enable "Launch with JIT" in its app-specific settings.
-- LiveContainer will communicate with the server before launching the app to enable JIT.
+Check out section 5.8 in [LiveContainer FAQ](https://github.com/LiveContainer/LiveContainer/issues/265)
 
 ### Installing external tweaks
 LiveContainer comes with its own TweakLoader, which automatically load CydiaSubstrate and tweaks. TweakLoader is injected to every app you install. You can override `TweakLoader.dylib` symlink with your own implementation if you wish.
@@ -70,12 +92,11 @@ LiveContainer offers three levels of app hiding:
 - **Hide Locked Apps**: Once locked, you can hide the app. It will appear as a placeholder in the "Hidden Apps" section, and authentication is needed to view or launch it.
 - **Strict Hiding Mode**: For complete invisibility, enable "Strict Hiding Mode" in LiveContainer's settings after authentication. Hidden apps will no longer appear in the interface. To access them, triple-tap the "x Apps in total" text on the main screen and authenticate to unlock the apps when you relaunch LiveContainer.
 
+## Compatibility
+Unfortunately, not all apps work in LiveContainer, so we have a [compatibility list](https://github.com/LiveContainer/LiveContainer/labels/compatibility) to tell if there is apps that have issues. If they aren't on this list, then it's likely going run. However, if it doesn't work, please make an [issue](https://github.com/LiveContainer/LiveContainer/issues/new/choose) about it.
+
 ## Building
-```
-export THEOS=/path/to/theos
-git submodule update --init --recursive
-make package
-```
+Open Xcode, select your developer account and set bundle identifier to `com.kdt.livecontainer.YOUR_TEAM_ID`
 
 ## Project structure
 ### Main executable
@@ -138,9 +159,6 @@ make package
 - Only one guest app can run at a time. This is much more like 3 apps limit where you have to disable an app to run another (switching between app in LiveContainer is instant).
 - Remote push notification might not work. ~~If you have a paid developer account then you don't even have to use LiveContainer~~
 - Querying custom URL schemes might not work(?)
-
-## Livecontainer Nightly
-To download nightly versions of Livecontainer (beta versions), visit this repo which contains expiremental features that have a high chance of entering a stable release. (https://github.com/hugeBlack/LiveContainer)
 
 ## TODO
 - Use ChOma instead of custom MachO parser
