@@ -196,7 +196,7 @@ struct LCAppBanner : View {
                                 Button {
                                     openSafariViewToCreateAppClip(model.uiContainers[i].name)
                                 } label: {
-                                    Text(model.uiContainers[i].name)
+                                    Text("Create with %@", model.uiContainers[i].name)
                                 }
                             }
                         }
