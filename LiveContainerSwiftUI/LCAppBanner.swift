@@ -190,7 +190,7 @@ struct LCAppBanner : View {
                     } label: {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
                     }
-                    Menu {
+                    //Menu {
                         List{
                             ForEach(model.uiContainers.indices, id:\.self) { i in
                                 Button {
@@ -200,9 +200,9 @@ struct LCAppBanner : View {
                                 }
                             }
                         }
-                    } label: {
-                        Label("lc.appBanner.createAppClipWithCustomContainerId".loc, systemImage: "appclip")
-                    }
+                    //} label: {
+                        //Label("lc.appBanner.createAppClipWithCustomContainerId".loc, systemImage: "appclip")
+                    //}
                     Button {
                         copyLaunchUrl()
                     } label: {
