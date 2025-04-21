@@ -186,23 +186,11 @@ struct LCAppBanner : View {
                 
                 Menu {
                     Button {
-                        openSafariViewToCreateAppClip(containerId: nil)
+                        //openSafariViewToCreateAppClip(containerId: nil)
+                        openSafariViewToCreateAppClip()
                     } label: {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
                     }
-                    //Menu {
-                    //    List{
-                            ForEach(model.uiContainers.indices, id:\.self) { i in
-                                Button {
-                                    openSafariViewToCreateAppClip(model.uiContainers[i].name)
-                                } label: {
-                                    Text("Create with %@", model.uiContainers[i].name)
-                                }
-                            }
-                    //    }
-                    //} label: {
-                    //    Label("lc.appBanner.createAppClipWithCustomContainerId".loc, systemImage: "appclip")
-                    //}
                     Button {
                         copyLaunchUrl()
                     } label: {
@@ -213,6 +201,12 @@ struct LCAppBanner : View {
                     } label: {
                         Label("lc.appBanner.saveAppIcon".loc, systemImage: "square.and.arrow.down")
                     }
+                    /*
+                    Button {
+                    } label: {
+                        Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
+                    }
+                    */
 
 
                 } label: {
@@ -409,7 +403,7 @@ struct LCAppBanner : View {
         }
         
     }
-    /*
+    
     func openSafariViewToCreateAppClip() {
         do {
             let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
@@ -420,7 +414,7 @@ struct LCAppBanner : View {
         }
 
     }
-    */
+    /*
     func openSafariViewToCreateAppClip(containerId: String?) {
         if let _containerId = containerId {
             do {
@@ -440,6 +434,7 @@ struct LCAppBanner : View {
             }
         }
     }
+    */
     
     func saveIcon() {
         let img = appInfo.generateLiveContainerWrappedIcon()!
