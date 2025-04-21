@@ -266,6 +266,23 @@
         }
       }
     },
+    "lc.appBanner.createAppClipWithCustomContainerId" : {
+    "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create App Clip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリクリップをカスタムContainerIDで作成"
+          }
+        }
+      }
+    },
     "lc.appBanner.deleteDataMsg %@" : {
       "extractionState" : "manual",
       "localizations" : {
