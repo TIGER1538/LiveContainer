@@ -358,7 +358,7 @@ struct LCAppBanner : View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("lc.common.cancel".loc, role: .cancel) {
-                        self.showCustomACsheet.toggle()
+                        self.showCustomACSheet.toggle()
                     }
                 }
             }
