@@ -813,7 +813,7 @@
         }
       }
     },
-    "lc.appBanner.customACModalTitle" ] {
+    "lc.appBanner.customACModalTitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
