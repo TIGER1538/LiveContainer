@@ -225,7 +225,10 @@ struct LCAppBanner : View {
                             }
                         }
                         */
-                        Label("test")
+                        Button {
+                        } label: {
+                            Text("test")
+                        }
                     }
                             
                     
