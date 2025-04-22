@@ -274,6 +274,7 @@ struct LCAppBanner : View {
         }
 
         .sheet(isPresented: $showCustomACSheet) {
+            customACModal
                         /*
                         List{
                             ForEach(model.uiContainers.indices, id:\.self) { i in
@@ -291,11 +292,6 @@ struct LCAppBanner : View {
                             }
                         }
                         */
-            Button {
-                self.showCustomACSheet.toggle()
-            } label: {
-                Text("test")
-            }
         }
     }
     
@@ -335,6 +331,34 @@ struct LCAppBanner : View {
                         jitAlert.close(result: true)
                     } label: {
                         Text("lc.appBanner.jitLaunchNow".loc)
+                    }
+                }
+            }
+        }
+    }
+
+    var customACModal: some View {
+        NavigationView {
+            List{
+                ForEach(model.uiContainers.indices, id:\.self) { i in
+                    Button {
+                        openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
+                        showCustomACSheet = false
+                    } label: {
+                        if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
+                            Text(model.uiContainers[i].name)
+                            .foregroundColor(Color.blue)
+                        } else {
+                            Text(model.uiContainers[i].name)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("lc.appBanner.customACModalTitle".loc)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("lc.common.cancel".loc, role: .cancel) {
+                        self.showCustomACsheet.toggle()
                     }
                 }
             }
