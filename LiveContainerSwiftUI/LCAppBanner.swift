@@ -38,6 +38,8 @@ struct LCAppBanner : View {
     @State private var mainColor : Color
     
     @EnvironmentObject private var sharedModel : SharedModel
+
+    @State private var showCustomACSheet: Bool = false
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
         _appInfo = State(initialValue: appModel.appInfo)
@@ -186,8 +188,7 @@ struct LCAppBanner : View {
                 
                 Menu {
                     Button {
-                        //openSafariViewToCreateAppClip(containerId: nil)
-                        openSafariViewToCreateAppClip()
+                        openSafariViewToCreateAppClip(containerId: nil)
                     } label: {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
                     }
@@ -201,12 +202,30 @@ struct LCAppBanner : View {
                     } label: {
                         Label("lc.appBanner.saveAppIcon".loc, systemImage: "square.and.arrow.down")
                     }
-                    /*
                     Button {
+                        showCustomACSheet = true
                     } label: {
                         Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
                     }
-                    */
+                    .sheet(isPresented: $showCustomACSheet) {
+                        List{
+                            ForEach(model.uiContainers.indices, id:\.self) { i in
+                                Button {
+                                    openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
+                                    showCustomACSheet = false
+                                } label: {
+                                    if model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
+                                        Text(model.uiContainers[i].name)
+                                        .foregroundColor(Color.blue)
+                                    } else {
+                                        Text(model.uiContainers[i].name)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                            
+                    
 
 
                 } label: {
@@ -403,7 +422,7 @@ struct LCAppBanner : View {
         }
         
     }
-    
+    /*
     func openSafariViewToCreateAppClip() {
         do {
             let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
@@ -414,7 +433,8 @@ struct LCAppBanner : View {
         }
 
     }
-    /*
+    */
+
     func openSafariViewToCreateAppClip(containerId: String?) {
         if let _containerId = containerId {
             do {
@@ -434,7 +454,7 @@ struct LCAppBanner : View {
             }
         }
     }
-    */
+    
     
     func saveIcon() {
         let img = appInfo.generateLiveContainerWrappedIcon()!
