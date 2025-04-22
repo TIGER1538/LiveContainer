@@ -203,7 +203,7 @@ struct LCAppBanner : View {
                         Label("lc.appBanner.saveAppIcon".loc, systemImage: "square.and.arrow.down")
                     }
                     Button {
-                        showCustomACSheet = true
+                        self.showCustomACSheet.toggle()
                     } label: {
                         Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
                     }
@@ -292,7 +292,7 @@ struct LCAppBanner : View {
                         }
                         */
             Button {
-                showCustomACSheet = false
+                self.showCustomACSheet.toggle()
             } label: {
                 Text("test")
             }
