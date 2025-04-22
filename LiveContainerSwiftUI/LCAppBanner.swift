@@ -208,6 +208,7 @@ struct LCAppBanner : View {
                         Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
                     }
                     .sheet(isPresented: $showCustomACSheet) {
+                        /*
                         List{
                             ForEach(model.uiContainers.indices, id:\.self) { i in
                                 Button {
@@ -223,6 +224,8 @@ struct LCAppBanner : View {
                                 }
                             }
                         }
+                        */
+                        Label("test")
                     }
                             
                     
