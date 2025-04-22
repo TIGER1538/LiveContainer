@@ -813,6 +813,23 @@
         }
       }
     },
+    "lc.appBanner.customACModalTitle" ] {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select data folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データフォルダの選択"
+          }
+        }
+      }
+    },
     "lc.appList.abortInstallation" : {
       "extractionState" : "manual",
       "localizations" : {
