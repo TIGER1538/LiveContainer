@@ -266,19 +266,19 @@
         }
       }
     },
-    "lc.appBanner.createAppClipWithCustomContainerId" : {
+    "lc.appBanner.customAppClip" : {
     "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create App Clip"
+            "value" : "Create Custom App Clip"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アプリクリップをカスタムContainerIDで作成"
+            "value" : "カスタムAppClipを作成"
           }
         }
       }
