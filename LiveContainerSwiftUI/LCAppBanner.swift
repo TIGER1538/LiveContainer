@@ -214,7 +214,7 @@ struct LCAppBanner : View {
                                     openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
                                     showCustomACSheet = false
                                 } label: {
-                                    if model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
+                                    if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
                                         Text(model.uiContainers[i].name)
                                         .foregroundColor(Color.blue)
                                     } else {
