@@ -207,33 +207,7 @@ struct LCAppBanner : View {
                     } label: {
                         Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
                     }
-                    .sheet(isPresented: $showCustomACSheet) {
-                        /*
-                        List{
-                            ForEach(model.uiContainers.indices, id:\.self) { i in
-                                Button {
-                                    openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
-                                    showCustomACSheet = false
-                                } label: {
-                                    if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
-                                        Text(model.uiContainers[i].name)
-                                        .foregroundColor(Color.blue)
-                                    } else {
-                                        Text(model.uiContainers[i].name)
-                                    }
-                                }
-                            }
-                        }
-                        */
-                        Button {
-                        } label: {
-                            Text("test")
-                        }
-                    }
-                            
                     
-
-
                 } label: {
                     Label("lc.appBanner.addToHomeScreen".loc, systemImage: "plus.app")
                 }
@@ -297,6 +271,31 @@ struct LCAppBanner : View {
         
         .onChange(of: jitAlert.show) { newValue in
             sharedModel.isJITModalOpen = newValue
+        }
+
+        .sheet(isPresented: $showCustomACSheet) {
+                        /*
+                        List{
+                            ForEach(model.uiContainers.indices, id:\.self) { i in
+                                Button {
+                                    openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
+                                    showCustomACSheet = false
+                                } label: {
+                                    if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
+                                        Text(model.uiContainers[i].name)
+                                        .foregroundColor(Color.blue)
+                                    } else {
+                                        Text(model.uiContainers[i].name)
+                                    }
+                                }
+                            }
+                        }
+                        */
+            Button {
+                showCustomACSheet = false
+            } label: {
+                Text("test")
+            }
         }
     }
     
