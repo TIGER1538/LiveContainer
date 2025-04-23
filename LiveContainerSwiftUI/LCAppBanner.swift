@@ -275,23 +275,6 @@ struct LCAppBanner : View {
 
         .sheet(isPresented: $showCustomACSheet) {
             customACModal
-                        /*
-                        List{
-                            ForEach(model.uiContainers.indices, id:\.self) { i in
-                                Button {
-                                    openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
-                                    showCustomACSheet = false
-                                } label: {
-                                    if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
-                                        Text(model.uiContainers[i].name)
-                                        .foregroundColor(Color.blue)
-                                    } else {
-                                        Text(model.uiContainers[i].name)
-                                    }
-                                }
-                            }
-                        }
-                        */
         }
     }
     
@@ -346,8 +329,8 @@ struct LCAppBanner : View {
                         showCustomACSheet = false
                     } label: {
                         if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
-                            Text(model.uiContainers[i].name)
-                            .foregroundColor(Color.blue)
+                            Text("\(model.uiContainers[i].name) ")
+                                + Text("[default]").foregroundColor(Color.green)
                         } else {
                             Text(model.uiContainers[i].name)
                         }
@@ -451,36 +434,20 @@ struct LCAppBanner : View {
         }
         
     }
-    /*
-    func openSafariViewToCreateAppClip() {
-        do {
-            let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
-            delegate.installMdm(data: data)
-        } catch  {
-            errorShow = true
-            errorInfo = error.localizedDescription
-        }
-
-    }
-    */
+    
 
     func openSafariViewToCreateAppClip(containerId: String?) {
-        if let _containerId = containerId {
-            do {
+        do {
+            if let _containerId = containerId {
                 let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: _containerId)!, format: .xml, options: 0)
                 delegate.installMdm(data: data)
-            } catch  {
-                errorShow = true
-                errorInfo = error.localizedDescription
-            }
-        } else {
-            do {
+            } else {
                 let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
                 delegate.installMdm(data: data)
-            } catch  {
-                errorShow = true
-                errorInfo = error.localizedDescription
             }
+        } catch {
+            errorShow = true
+            errorInfo = error.localizedDescription
         }
     }
     
