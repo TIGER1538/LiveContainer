@@ -327,7 +327,6 @@ struct LCAppBanner : View {
             Section {
                 TextField("Display Name", text: $WCCustomDisplayName)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding(.horizontal)
             } header: {
                 Text("Display Name")
             }
