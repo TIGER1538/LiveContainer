@@ -5,7 +5,7 @@
 
 <div align="center">
   <h1><b>LiveContainer</b></h1>
-  <p><i>An app launcher that runs iOS app without actually installing it! </i></p>
+  <p><i>An app launcher that runs iOS apps without actually installing them! </i></p>
 </div>
 <h6 align="center">
 
@@ -13,8 +13,8 @@
 
 # LiveContainer
 
-- LiveContainer is an app launcher (not emulator or hypervisor) that allows you to run app inside it.
-- Allows you to install unlimited apps (10 apps limit of free developer account do not apply here!), have multiple versions of an app installed and multiple data containers.
+- LiveContainer is an app launcher (not emulator or hypervisor) that allows you to run iOS apps inside it.
+- Allows you to install unlimited apps (3 app/10 app id free developer account limit does not apply here!), can have multiple versions of an app installed with multiple data containers.
 - When JIT is available, codesign is entirely bypassed, no need to sign your apps before installing. Otherwise, app will be signed with the same certificate used by LiveContainer.
 
 >[!Note]
@@ -22,7 +22,7 @@ It’s recommended to follow the following steps to set up JIT-Less mode for usi
 
 ## Usage
 Requires AltStore or SideStore
-- Download the latest version [here](https://github.com/LiveContainer/LiveContainer/releases/latest) or download the latest nightly version [here](https://github.com/LiveContainer/LiveContainer/releases/tag/nightly)
+- Download methods: [AltStore Source](https://tinyurl.com/LCAltStoreClassic), [SideStore Source](https://tinyurl.com/LCSideStore), the latest IPA [here](https://github.com/LiveContainer/LiveContainer/releases/latest), or the latest nightly IPA [here](https://github.com/LiveContainer/LiveContainer/releases/tag/nightly)
 - It is recommended to setup JIT-Less mode, in which LiveContainer signs your apps with certificate from SideStore/AltStore, see the instructions below.
 - Open LiveContainer, tap the plus icon in the upper right hand corner and select IPA files to install.
 - Choose the app you want to open in the next launch.
