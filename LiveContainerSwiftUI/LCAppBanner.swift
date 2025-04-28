@@ -52,6 +52,9 @@ struct LCAppBanner : View {
         _mainColor = State(initialValue: extractMainHueColor())
     }
     @State private var mainHueColor: CGFloat? = nil
+
+    @State private var WCSelectedContainerIndex: Int = 0
+    @State private var WCCustomDisplayName: String = "";
     
     var body: some View {
 
@@ -274,6 +277,7 @@ struct LCAppBanner : View {
         }
 
         .sheet(isPresented: $showCustomACSheet) {
+            WCCustomDisplayName = appInfo.displayName()
             customACModal
         }
     }
@@ -320,8 +324,6 @@ struct LCAppBanner : View {
         }
     }
 
-    @State var WCSelectedContainer: String?
-    @State var WCCustomDisplayName: String = "";
     var customACModal: some View {
         NavigationView {
             Section {
@@ -332,15 +334,12 @@ struct LCAppBanner : View {
             }
           
             List{
-                Picker("Container data folder", selection: $WCSelectedContainer) {
+                Picker("Container data folder", selection: $WCSelectedContainerIndex) {
                     ForEach(model.uiContainers.indices, id:\.self) { i in
                         if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
-                            (Text("\(model.uiContainers[i].name) ")
-                                + Text("[default]").foregroundColor(Color.green))
-                                .tag(model.uiContainers[i].folderName)
+                            Text("\(model.uiContainers[i].name) ") + Text("[default]").foregroundColor(Color.green)
                         } else {
                             Text(model.uiContainers[i].name)
-                                .tag(model.uiContainers[i].folderName)
                         }
                     }
                 }
@@ -355,17 +354,13 @@ struct LCAppBanner : View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        openSafariViewToCreateAppClip(containerId: WCSelectedContainer, displayName: WCCustomDisplayName)
+                        openSafariViewToCreateAppClip(containerId: model.uiContainers[WCSelectedContainerIndex].folderName, displayName: WCCustomDisplayName)
                         self.showCustomACSheet.toggle()
                     } label: {
                         Text("Create")
                     }
                 }
             }
-        }
-        .onAppear {
-            WCCustomDisplayName = appInfo.displayName()
-            WCSelectedContainer = model.uiDefaultDataFolder
         }
     }
     
