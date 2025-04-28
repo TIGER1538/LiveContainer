@@ -78,10 +78,11 @@ struct LCAppSettingsView : View{
                 }
                 
                 if !model.uiIsShared {
-                    Button("lc.appSettings.toSharedApp".loc) {
-                        Task { await moveToAppGroup()}
+                    if LCUtils.isAppGroupAltStoreLike() {
+                        Button("lc.appSettings.toSharedApp".loc) {
+                            Task { await moveToAppGroup()}
+                        }
                     }
-                    
                 } else if sharedModel.multiLCStatus != 2 {
                     Button("lc.appSettings.toPrivateApp".loc) {
                         Task { await movePrivateDoc() }

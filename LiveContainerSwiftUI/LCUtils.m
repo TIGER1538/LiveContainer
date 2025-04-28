@@ -185,8 +185,7 @@ Class LCSharedUtilsClass = nil;
 }
 
 + (BOOL)isAppGroupAltStoreLike {
-    if (self.appGroupID.length == 0) return NO;
-    return [NSFileManager.defaultManager fileExistsAtPath:self.storeBundlePath.path];
+    return ![self.appGroupID isEqualToString:@"Unknown"];
 }
 
 + (void)changeMainExecutableTo:(NSString *)exec error:(NSError **)error {

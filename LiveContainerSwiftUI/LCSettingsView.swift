@@ -126,7 +126,7 @@ struct LCSettingsView: View {
                         Text("lc.settings.jitLessDesc".loc)
                     }
                 }
-                if store != .Unknown {
+                if store != .Unknown || LCUtils.isAppGroupAltStoreLike() {
                     Section{
                         Button {
                             Task { await installAnotherLC() }
