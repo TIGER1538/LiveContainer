@@ -206,6 +206,7 @@ struct LCAppBanner : View {
                         Label("lc.appBanner.saveAppIcon".loc, systemImage: "square.and.arrow.down")
                     }
                     Button {
+                        WCCustomDisplayName = appInfo.displayName()!
                         self.showCustomACSheet.toggle()
                     } label: {
                         Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
@@ -277,7 +278,6 @@ struct LCAppBanner : View {
         }
 
         .sheet(isPresented: $showCustomACSheet) {
-            WCCustomDisplayName = appInfo.displayName()
             customACModal
         }
     }
