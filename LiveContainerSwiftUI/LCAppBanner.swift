@@ -328,14 +328,15 @@ struct LCAppBanner : View {
         NavigationView {
             Form {
                 Section {
-                    TextField("Enter display Name", text: $WCCustomDisplayName)
+                    TextField("lc.appBanner.displayNameTextField".loc, text: $WCCustomDisplayName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                 } header: {
-                    Text("Display Name")
+                    Text("lc.appBanner.displayName".loc)
                 }
+                .textCase(nil)
             
                 Section {
-                    Picker("Container data folder", selection: $WCSelectedContainerIndex) {
+                    Picker(selection: $WCSelectedContainerIndex) {
                         ForEach(model.uiContainers.indices, id:\.self) { i in
                             if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
                                 Text("\(model.uiContainers[i].name) ") + Text("[default]").foregroundColor(Color.green)
@@ -345,7 +346,10 @@ struct LCAppBanner : View {
                         }
                     }
                     .pickerStyle(.inline)
+                } header: {
+                    Text("lc.appBanner.dataFolderHeader".loc)
                 }
+                .textCase(nil)
             }
             .navigationTitle("lc.appBanner.customACModalTitle".loc)
             .toolbar {
@@ -359,7 +363,7 @@ struct LCAppBanner : View {
                         openSafariViewToCreateAppClip(containerId: model.uiContainers[WCSelectedContainerIndex].folderName, displayName: WCCustomDisplayName)
                         self.showCustomACSheet.toggle()
                     } label: {
-                        Text("Create")
+                        Text("lc.appBanner.executeCreation".loc)
                     }
                 }
             }

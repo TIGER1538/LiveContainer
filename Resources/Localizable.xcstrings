@@ -819,13 +819,81 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select data folder"
+            "value" : "Create a custom WebClip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムWebClipの作成"
+          }
+        }
+      }
+    },
+    "lc.appBanner.displayNameTextField" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Display Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示名を入力"
+          }
+        }
+      }
+    },
+    "lc.appBanner.displayName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示名変更"
+          }
+        }
+      }
+    },
+    "lc.appBanner.dataFolderHeader" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a data folder"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "データフォルダの選択"
+          }
+        }
+      }
+    },
+    "lc.appBanner.executeCreation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作成"
           }
         }
       }
