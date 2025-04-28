@@ -326,24 +326,26 @@ struct LCAppBanner : View {
 
     var customACModal: some View {
         NavigationView {
-            Section {
-                TextField("Display Name", text: $WCCustomDisplayName)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-            } header: {
-                Text("Display Name")
-            }
-          
-            List{
-                Picker("Container data folder", selection: $WCSelectedContainerIndex) {
-                    ForEach(model.uiContainers.indices, id:\.self) { i in
-                        if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
-                            Text("\(model.uiContainers[i].name) ") + Text("[default]").foregroundColor(Color.green)
-                        } else {
-                            Text(model.uiContainers[i].name)
+            Form {
+                Section {
+                    TextField("Enter display Name", text: $WCCustomDisplayName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                } header: {
+                    Text("Display Name")
+                }
+            
+                Section {
+                    Picker("Container data folder", selection: $WCSelectedContainerIndex) {
+                        ForEach(model.uiContainers.indices, id:\.self) { i in
+                            if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
+                                Text("\(model.uiContainers[i].name) ") + Text("[default]").foregroundColor(Color.green)
+                            } else {
+                                Text(model.uiContainers[i].name)
+                            }
                         }
                     }
+                    .pickerStyle(.inline)
                 }
-                .pickerStyle(.inline)
             }
             .navigationTitle("lc.appBanner.customACModalTitle".loc)
             .toolbar {
