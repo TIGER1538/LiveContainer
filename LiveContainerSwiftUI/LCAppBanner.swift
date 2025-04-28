@@ -188,7 +188,7 @@ struct LCAppBanner : View {
                 
                 Menu {
                     Button {
-                        openSafariViewToCreateAppClip(containerId: nil)
+                        openSafariViewToCreateAppClip(containerId: nil, displayName: nil)
                     } label: {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
                     }
@@ -320,22 +320,32 @@ struct LCAppBanner : View {
         }
     }
 
+    @State var WCSelectedContainer: String?
+    @State var WCCustomDisplayName: String = "";
     var customACModal: some View {
         NavigationView {
+            Section {
+                TextField("Display Name", text: $WCCustomDisplayName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal)
+            } header: {
+                Text("Display Name")
+            }
+          
             List{
-                ForEach(model.uiContainers.indices, id:\.self) { i in
-                    Button {
-                        openSafariViewToCreateAppClip(containerId: model.uiContainers[i].folderName)
-                        showCustomACSheet = false
-                    } label: {
+                Picker("Container data folder", selection: $WCSelectedContainer) {
+                    ForEach(model.uiContainers.indices, id:\.self) { i in
                         if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
-                            Text("\(model.uiContainers[i].name) ")
-                                + Text("[default]").foregroundColor(Color.green)
+                            (Text("\(model.uiContainers[i].name) ")
+                                + Text("[default]").foregroundColor(Color.green))
+                                .tag(model.uiContainers[i].folderName)
                         } else {
                             Text(model.uiContainers[i].name)
+                                .tag(model.uiContainers[i].folderName)
                         }
                     }
                 }
+                .pickerStyle(.inline)
             }
             .navigationTitle("lc.appBanner.customACModalTitle".loc)
             .toolbar {
@@ -344,7 +354,19 @@ struct LCAppBanner : View {
                         self.showCustomACSheet.toggle()
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        openSafariViewToCreateAppClip(containerId: WCSelectedContainer, displayName: WCCustomDisplayName)
+                        self.showCustomACSheet.toggle()
+                    } label: {
+                        Text("Create")
+                    }
+                }
             }
+        }
+        .onAppear {
+            WCCustomDisplayName = appInfo.displayName()
+            WCSelectedContainer = model.uiDefaultDataFolder
         }
     }
     
@@ -436,13 +458,13 @@ struct LCAppBanner : View {
     }
     
 
-    func openSafariViewToCreateAppClip(containerId: String?) {
+    func openSafariViewToCreateAppClip(containerId: String?, displayName: String?) {
         do {
             if let _containerId = containerId {
-                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: _containerId)!, format: .xml, options: 0)
+                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: _containerId, displayName: displayName)!, format: .xml, options: 0)
                 delegate.installMdm(data: data)
             } else {
-                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
+                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName, displayName: displayName)!, format: .xml, options: 0)
                 delegate.installMdm(data: data)
             }
         } catch {

@@ -5,3 +5,4 @@ packages/
 *.xccheckout
 xcuserdata
 Resources/Frameworks/OpenSSL.framework
+.vscode/
