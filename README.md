@@ -20,6 +20,9 @@
 >[!Note]
 It’s recommended to follow the following steps to set up JIT-Less mode for using LiveContainer without JIT. If you encounter any issues, please review #265 first before reporting them.
 
+## How does it differ from the original repo?
+This repository aims to implement features such as language selection and the ability to create WebClips with user customizations, including data folder selection, custom display names, and more! You can view the changes I made in the [InDev branch](https://github.com/TIGER1538/LiveContainer/tree/InDev), and the IPA files are available in the [Actions tab](https://github.com/TIGER1538/LiveContainer/actions) or [nightly release](https://github.com/TIGER1538/LiveContainer/releases/tag/nightly).
+
 ## Usage
 Requires AltStore or SideStore
 - Download methods: [AltStore Source](https://tinyurl.com/LCAltStoreClassic), [SideStore Source](https://tinyurl.com/LCSideStore), the latest IPA [here](https://github.com/LiveContainer/LiveContainer/releases/latest), or the latest nightly IPA [here](https://github.com/LiveContainer/LiveContainer/releases/tag/nightly)
