@@ -350,6 +350,7 @@ struct LCAppBanner : View {
                     Text("lc.appBanner.dataFolderHeader".loc)
                 }
                 .textCase(nil)
+                .labelsHidden()
             }
             .navigationTitle("lc.appBanner.customACModalTitle".loc)
             .toolbar {
