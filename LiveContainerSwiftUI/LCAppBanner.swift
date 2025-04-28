@@ -336,7 +336,7 @@ struct LCAppBanner : View {
                 .textCase(nil)
             
                 Section {
-                    Picker(selection: $WCSelectedContainerIndex) {
+                    Picker("", selection: $WCSelectedContainerIndex) {
                         ForEach(model.uiContainers.indices, id:\.self) { i in
                             if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
                                 Text("\(model.uiContainers[i].name) ") + Text("[default]").foregroundColor(Color.green)
