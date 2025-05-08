@@ -16,6 +16,7 @@ struct LCAppSettingsView : View{
     
     @Binding var appDataFolders: [String]
     @Binding var tweakFolders: [String]
+    @Binding var customDisplayName: String
     
 
     @StateObject private var renameFolderInput = InputHelper()
@@ -121,6 +122,26 @@ struct LCAppSettingsView : View{
                 Text("lc.common.container".loc)
             }
             
+            Section {
+                HStack {
+                    Text("Display Name")
+                    Spacer()
+                    Text(customDisplayName)
+                }
+                if customDisplayName == appInfo.displayName() {
+                    Text("Already set to the default")
+                        .foregroundStyle(.gray)
+                } else {
+                    Button {
+                        customDisplayName = appInfo.displayName()
+                        (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).removeObject(forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                    } label: {
+                        Text("Rename to the default")
+                    }
+                }
+            } header: {
+                Text("Name")
+            }
             
             Section {
                 Toggle(isOn: $model.uiIsJITNeeded) {

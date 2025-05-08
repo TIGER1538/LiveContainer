@@ -39,7 +39,7 @@ struct LCAppBanner : View {
     
     @EnvironmentObject private var sharedModel : SharedModel
 
-    @State private var customDisplayName: String = ""
+    @State var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
@@ -254,10 +254,10 @@ struct LCAppBanner : View {
                     Button {
                         openSettings()
                     } label: {
-                        Label("Advances...".loc, systemImage: "gear")
+                        Label("Advances...", systemImage: "gear")
                     }
                 } label: {
-                    Label("lc.tabView.settings".loc)
+                    Label("lc.tabView.settings".loc, systemImage: "gear")
                 }
                 
                 if !model.uiIsShared {
