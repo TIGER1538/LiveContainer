@@ -85,7 +85,7 @@ struct LCAppBanner : View {
                             .font(.system(size: 16)).bold()
                             .frame(width: 100)
                         } else { 
-                            Text(customDisplayName!).font(.system(size: 16)).bold()
+                            Text(customDisplayName).font(.system(size: 16)).bold()
                         }
                         if model.uiIsShared {
                             Image(systemName: "arrowshape.turn.up.left.fill")
