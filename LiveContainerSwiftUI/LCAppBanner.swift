@@ -39,7 +39,7 @@ struct LCAppBanner : View {
     
     @EnvironmentObject private var sharedModel : SharedModel
 
-    @State private var customDisplayName: String
+    @State private var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
@@ -63,7 +63,7 @@ struct LCAppBanner : View {
     //variables for custom webclip
     @State private var showCustomWCSheet: Bool = false
     @State private var WCSelectedContainerIndex: Int = 0
-    @State private var WCCustomDisplayName: String = "";
+    @State private var WCCustomDisplayName: String = ""
     
     var body: some View {
 
