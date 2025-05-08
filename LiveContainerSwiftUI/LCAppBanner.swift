@@ -39,7 +39,8 @@ struct LCAppBanner : View {
     
     @EnvironmentObject private var sharedModel : SharedModel
 
-    @State private var showCustomACSheet: Bool = false
+    @State private var customDisplayName: String?
+    @State private var editDisplayName: Bool = false
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
         _appInfo = State(initialValue: appModel.appInfo)
@@ -50,9 +51,17 @@ struct LCAppBanner : View {
         _model = ObservedObject(wrappedValue: appModel)
         _mainColor = State(initialValue: Color.clear)
         _mainColor = State(initialValue: extractMainHueColor())
+
+        if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo..relativeBundlePath)") {
+            _customDisplayName = State(initialValue: _tempDispName)
+        } else {
+            _customDisplayName = State(initialValue: appModel.appInfo.displayName())
+        }
     }
     @State private var mainHueColor: CGFloat? = nil
 
+    //variables for custom webclip
+    @State private var showCustomWCSheet: Bool = false
     @State private var WCSelectedContainerIndex: Int = 0
     @State private var WCCustomDisplayName: String = "";
     
@@ -67,7 +76,17 @@ struct LCAppBanner : View {
 
                 VStack (alignment: .leading, content: {
                     HStack {
-                        Text(appInfo.displayName()).font(.system(size: 16)).bold()
+                        if editDisplayName {
+                            TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName!, onCommit: {
+                                (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                                editDisplayName.toggle()
+                            })
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .font(.system(size: 16)).bold()
+                            .frame(width: 100)
+                        } else { 
+                            Text(customDisplayName!).font(.system(size: 16)).bold()
+                        }
                         if model.uiIsShared {
                             Image(systemName: "arrowshape.turn.up.left.fill")
                                 .font(.system(size: 8))
@@ -207,13 +226,28 @@ struct LCAppBanner : View {
                     }
                     Button {
                         WCCustomDisplayName = appInfo.displayName()!
-                        self.showCustomACSheet.toggle()
+                        self.showCustomWCSheet.toggle()
                     } label: {
                         Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
                     }
                     
                 } label: {
                     Label("lc.appBanner.addToHomeScreen".loc, systemImage: "plus.app")
+                }
+
+                Menu {
+                    Button {
+                        editDisplayName.toggle()
+                    } label: {
+                        Label("Edit Display Name", systemImage: "pencil.and.ellipsis.rectangle")
+                    }
+                    Button {
+                        openSettings()
+                    } label: {
+                        Label("Advances...".loc, systemImage: "gear")
+                    }
+                } label: {
+                    Label("lc.tabView.settings".loc, systemImage: "plus.app")
                 }
                 
                 Button {
@@ -277,7 +311,7 @@ struct LCAppBanner : View {
             sharedModel.isJITModalOpen = newValue
         }
 
-        .sheet(isPresented: $showCustomACSheet) {
+        .sheet(isPresented: $showCustomWCSheet) {
             customACModal
         }
     }
@@ -356,13 +390,13 @@ struct LCAppBanner : View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("lc.common.cancel".loc, role: .cancel) {
-                        self.showCustomACSheet.toggle()
+                        self.showCustomWCSheet.toggle()
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         openSafariViewToCreateAppClip(containerId: model.uiContainers[WCSelectedContainerIndex].folderName, displayName: WCCustomDisplayName)
-                        self.showCustomACSheet.toggle()
+                        self.showCustomWCSheet.toggle()
                     } label: {
                         Text("lc.appBanner.executeCreation".loc)
                     }

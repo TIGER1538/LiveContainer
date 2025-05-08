@@ -165,6 +165,8 @@ Open Xcode, select your developer account and set bundle identifier to `com.kdt.
 
 ## TODO
 - Use ChOma instead of custom MachO parser
+- Refreash App list and Tweak list
+- Custom App name in AppListView
 
 ## License
 [Apache License 2.0](https://github.com/khanhduytran0/LiveContainer/blob/main/LICENSE)
