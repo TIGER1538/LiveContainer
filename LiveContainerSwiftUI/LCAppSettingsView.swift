@@ -30,11 +30,12 @@ struct LCAppSettingsView : View{
     
     @EnvironmentObject private var sharedModel : SharedModel
     
-    init(model: LCAppModel, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
+    init(model: LCAppModel, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>, customDisplayName: Binding<String>) {
         self.appInfo = model.appInfo
         self._model = ObservedObject(wrappedValue: model)
         _appDataFolders = appDataFolders
         _tweakFolders = tweakFolders
+        _customDisplayName = customDisplayName
     }
     
     var body: some View {
@@ -133,8 +134,8 @@ struct LCAppSettingsView : View{
                         .foregroundStyle(.gray)
                 } else {
                     Button {
-                        customDisplayName = appInfo.displayName()
                         (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).removeObject(forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                        customDisplayName = appInfo.displayName()
                     } label: {
                         Text("Rename to the default")
                     }
