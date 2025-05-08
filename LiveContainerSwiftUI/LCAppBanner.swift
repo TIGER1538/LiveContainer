@@ -39,7 +39,7 @@ struct LCAppBanner : View {
     
     @EnvironmentObject private var sharedModel : SharedModel
 
-    @State private var customDisplayName: String?
+    @State private var customDisplayName: String
     @State private var editDisplayName: Bool = false
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
