@@ -77,13 +77,23 @@ struct LCAppBanner : View {
                 VStack (alignment: .leading, content: {
                     HStack {
                         if editDisplayName {
-                            TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName, onCommit: {
-                                (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
-                                editDisplayName.toggle()
-                            })
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .font(.system(size: 16)).bold()
-                            .frame(width: 100)
+                            if #available(iOS 16.0, *){
+                                TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName, onCommit: {
+                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                                    editDisplayName.toggle()
+                                })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .font(.system(size: 16)).bold()
+                                .frame(width: 100)
+                            } else {
+                                TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName, onCommit: {
+                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                                    editDisplayName.toggle()
+                                })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .font(.system(size: 16))
+                                .frame(width: 100)
+                            }
                         } else { 
                             Text(customDisplayName).font(.system(size: 16)).bold()
                         }
