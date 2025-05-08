@@ -52,7 +52,7 @@ struct LCAppBanner : View {
         _mainColor = State(initialValue: Color.clear)
         _mainColor = State(initialValue: extractMainHueColor())
 
-        if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo..relativeBundlePath)") {
+        if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath)") {
             _customDisplayName = State(initialValue: _tempDispName)
         } else {
             _customDisplayName = State(initialValue: appModel.appInfo.displayName())
@@ -77,7 +77,7 @@ struct LCAppBanner : View {
                 VStack (alignment: .leading, content: {
                     HStack {
                         if editDisplayName {
-                            TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName!, onCommit: {
+                            TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName, onCommit: {
                                 (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
                                 editDisplayName.toggle()
                             })
