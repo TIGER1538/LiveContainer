@@ -257,15 +257,8 @@ struct LCAppBanner : View {
                         Label("Advances...".loc, systemImage: "gear")
                     }
                 } label: {
-                    Label("lc.tabView.settings".loc, systemImage: "plus.app")
+                    Label("lc.tabView.settings".loc)
                 }
-                
-                Button {
-                    openSettings()
-                } label: {
-                    Label("lc.tabView.settings".loc, systemImage: "gear")
-                }
-
                 
                 if !model.uiIsShared {
                     Button(role: .destructive) {
