@@ -42,6 +42,7 @@ struct LCAppBanner : View {
     @State var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
     @State var displayNameEdited: Bool = false
+    @FocusState private var displayNameTextFieldFocus: Bool
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
         _appInfo = State(initialValue: appModel.appInfo)
@@ -89,6 +90,7 @@ struct LCAppBanner : View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .font(.system(size: 16)).bold()
                                 .frame(width: 100)
+                                .focused($displayNameTextFieldFocus)
                             } else {
                                 TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
                                     (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
@@ -98,6 +100,7 @@ struct LCAppBanner : View {
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .font(.system(size: 16))
                                 .frame(width: 100)
+                                .focused($displayNameTextFieldFocus)
                             }
                         } else { 
                             Text(customDisplayName).font(.system(size: 16)).bold()
@@ -105,7 +108,7 @@ struct LCAppBanner : View {
                         if displayNameEdited {
                             Image(systemName: "pencil.and.ellipsis.rectangle")
                                 .font(.system(size: 8))
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                                 .frame(width: 16, height:16)
                                 .background(
                                     Capsule().fill(Color(.cyan))
@@ -263,6 +266,7 @@ struct LCAppBanner : View {
                 Menu {
                     Button {
                         editDisplayName.toggle()
+                        displayNameTextFieldFocus.toggle()
                     } label: {
                         Label("Edit Display Name", systemImage: "pencil.and.ellipsis.rectangle")
                     }

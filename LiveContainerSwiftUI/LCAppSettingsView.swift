@@ -133,10 +133,11 @@ struct LCAppSettingsView : View{
                     TextField("DisplayNameTextField", text: $customDisplayName)
                         .multilineTextAlignment(.trailing)
                         .onSubmit {
+                            displayNameEdited = true
                             (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
                         }
                 }
-                if customDisplayName == appInfo.displayName() {
+                if customDisplayName == appInfo.displayName() && !displayNameEdited {
                     Text("Already set to the default")
                         .foregroundStyle(.gray)
                 } else {
