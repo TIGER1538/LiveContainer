@@ -53,7 +53,7 @@ struct LCAppBanner : View {
         _mainColor = State(initialValue: Color.clear)
         _mainColor = State(initialValue: extractMainHueColor())
 
-        if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath)") {
+        if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath!)") {
             _customDisplayName = State(initialValue: _tempDispName)
             displayNameEdited = true
         } else {
@@ -82,7 +82,7 @@ struct LCAppBanner : View {
                             // TODO: impl loc
                             if #available(iOS 16.0, *){
                                 TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
-                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
                                     editDisplayName.toggle()
                                     displayNameEdited = true
                                 })
@@ -91,7 +91,7 @@ struct LCAppBanner : View {
                                 .frame(width: 100)
                             } else {
                                 TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
-                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
                                     editDisplayName.toggle()
                                     displayNameEdited = true
                                 })
@@ -108,7 +108,7 @@ struct LCAppBanner : View {
                                 .foregroundColor(.white)
                                 .frame(width: 16, height:16)
                                 .background(
-                                    Capsule().fill(Color(.blue))
+                                    Capsule().fill(Color(.cyan))
                                 )
                         }
                         if model.uiIsShared {

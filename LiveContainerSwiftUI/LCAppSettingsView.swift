@@ -133,7 +133,7 @@ struct LCAppSettingsView : View{
                     TextField("DisplayNameTextField", text: $customDisplayName)
                         .multilineTextAlignment(.trailing)
                         .onSubmit {
-                            (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                            (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
                         }
                 }
                 if customDisplayName == appInfo.displayName() {
@@ -141,7 +141,7 @@ struct LCAppSettingsView : View{
                         .foregroundStyle(.gray)
                 } else {
                     Button {
-                        (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).removeObject(forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                        (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).removeObject(forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
                         customDisplayName = appInfo.displayName()
                         displayNameEdited = false
                     } label: {
