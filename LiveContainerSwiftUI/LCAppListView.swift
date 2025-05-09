@@ -51,6 +51,8 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
     
     @EnvironmentObject private var sharedModel : SharedModel
 
+    @State private var refreshFlag = false
+
     init(appDataFolderNames: Binding<[String]>, tweakFolderNames: Binding<[String]>) {
         _installOptions = State(initialValue: [])
         _appDataFolderNames = appDataFolderNames
@@ -190,7 +192,15 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                         helpPresent = true
                     }
                 }
-                
+
+                // TODO: impl loc
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        refreshFlag.toggle()
+                    } label: {
+                        Label("refresh", systemImage: "arrow.2.circlepath")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("lc.appList.openLink".loc, systemImage: "link", action: {
                         Task { await onOpenWebViewTapped() }
