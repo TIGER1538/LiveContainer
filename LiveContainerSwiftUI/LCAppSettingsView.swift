@@ -17,6 +17,7 @@ struct LCAppSettingsView : View{
     @Binding var appDataFolders: [String]
     @Binding var tweakFolders: [String]
     @Binding var customDisplayName: String
+    @Binding var displayNameEdited: Bool
     
 
     @StateObject private var renameFolderInput = InputHelper()
@@ -30,12 +31,13 @@ struct LCAppSettingsView : View{
     
     @EnvironmentObject private var sharedModel : SharedModel
     
-    init(model: LCAppModel, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>, customDisplayName: Binding<String>) {
+    init(model: LCAppModel, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>, customDisplayName: Binding<String>, displayNameEdited: Binding<Bool>) {
         self.appInfo = model.appInfo
         self._model = ObservedObject(wrappedValue: model)
         _appDataFolders = appDataFolders
         _tweakFolders = tweakFolders
         _customDisplayName = customDisplayName
+        _displayNameEdited = displayNameEdited
     }
     
     var body: some View {
@@ -123,11 +125,16 @@ struct LCAppSettingsView : View{
                 Text("lc.common.container".loc)
             }
             
+            // TODO: impl loc
             Section {
                 HStack {
                     Text("Display Name")
                     Spacer()
-                    Text(customDisplayName)
+                    TextField("DisplayNameTextField", text: $customDisplayName)
+                        .multilineTextAlignment(.trailing)
+                        .onSubmit {
+                            (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
+                        }
                 }
                 if customDisplayName == appInfo.displayName() {
                     Text("Already set to the default")
@@ -136,6 +143,7 @@ struct LCAppSettingsView : View{
                     Button {
                         (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).removeObject(forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
                         customDisplayName = appInfo.displayName()
+                        displayNameEdited = false
                     } label: {
                         Text("Rename to the default")
                     }
@@ -302,7 +310,7 @@ struct LCAppSettingsView : View{
             }
 
         }
-        .navigationTitle(appInfo.displayName())
+        .navigationTitle(customDisplayName)
         .navigationBarTitleDisplayMode(.inline)
         .alert("lc.common.error".loc, isPresented: $errorShow) {
             Button("lc.common.ok".loc, action: {

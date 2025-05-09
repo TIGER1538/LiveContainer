@@ -41,6 +41,7 @@ struct LCAppBanner : View {
 
     @State var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
+    @State var displayNameEdited: Bool = false
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
         _appInfo = State(initialValue: appModel.appInfo)
@@ -54,6 +55,7 @@ struct LCAppBanner : View {
 
         if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath)") {
             _customDisplayName = State(initialValue: _tempDispName)
+            displayNameEdited = true
         } else {
             _customDisplayName = State(initialValue: appModel.appInfo.displayName())
         }
@@ -77,8 +79,9 @@ struct LCAppBanner : View {
                 VStack (alignment: .leading, content: {
                     HStack {
                         if editDisplayName {
+                            // TODO: impl loc
                             if #available(iOS 16.0, *){
-                                TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName, onCommit: {
+                                TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
                                     (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
                                     editDisplayName.toggle()
                                 })
@@ -86,7 +89,7 @@ struct LCAppBanner : View {
                                 .font(.system(size: 16)).bold()
                                 .frame(width: 100)
                             } else {
-                                TextField("lc.appBanner.displayNameTextField".loc, text: $customDisplayName, onCommit: {
+                                TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
                                     (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
                                     editDisplayName.toggle()
                                 })
@@ -94,8 +97,18 @@ struct LCAppBanner : View {
                                 .font(.system(size: 16))
                                 .frame(width: 100)
                             }
+                            displayNameEdited = true
                         } else { 
                             Text(customDisplayName).font(.system(size: 16)).bold()
+                        }
+                        if displayNameEdited {
+                            Image(systemName: "pencil.and.ellipsis.rectangle")
+                                .font(.system(size: 8))
+                                .foregroundColor(.white)
+                                .frame(width: 16, height:16)
+                                .background(
+                                    Capsule().fill(Color(.blue))
+                                )
                         }
                         if model.uiIsShared {
                             Image(systemName: "arrowshape.turn.up.left.fill")
@@ -245,6 +258,7 @@ struct LCAppBanner : View {
                     Label("lc.appBanner.addToHomeScreen".loc, systemImage: "plus.app")
                 }
 
+                // TODO: impl loc
                 Menu {
                     Button {
                         editDisplayName.toggle()
@@ -435,7 +449,7 @@ struct LCAppBanner : View {
 
     
     func openSettings() {
-        delegate.openNavigationView(view: AnyView(LCAppSettingsView(model: model, appDataFolders: $appDataFolders, tweakFolders: $tweakFolders, customDisplayName: $customDisplayName)))
+        delegate.openNavigationView(view: AnyView(LCAppSettingsView(model: model, appDataFolders: $appDataFolders, tweakFolders: $tweakFolders, customDisplayName: $customDisplayName, displayNameEdited: $displayNameEdited)))
     }
     
     
