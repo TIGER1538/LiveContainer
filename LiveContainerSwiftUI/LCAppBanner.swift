@@ -84,6 +84,7 @@ struct LCAppBanner : View {
                                 TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
                                     (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
                                     editDisplayName.toggle()
+                                    displayNameEdited = true
                                 })
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .font(.system(size: 16)).bold()
@@ -92,12 +93,12 @@ struct LCAppBanner : View {
                                 TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
                                     (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath)")
                                     editDisplayName.toggle()
+                                    displayNameEdited = true
                                 })
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .font(.system(size: 16))
                                 .frame(width: 100)
                             }
-                            displayNameEdited = true
                         } else { 
                             Text(customDisplayName).font(.system(size: 16)).bold()
                         }
