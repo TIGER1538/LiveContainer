@@ -6,3 +6,4 @@ packages/
 xcuserdata
 Resources/Frameworks/OpenSSL.framework
 .vscode/
+archive.xcarchive
