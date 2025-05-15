@@ -41,7 +41,7 @@ struct LCAppBanner : View {
 
     @State var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
-    @State var displayNameEdited: Bool = false
+    @State var displayNameEdited: Bool
     @FocusState private var displayNameTextFieldFocus: Bool
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
@@ -56,9 +56,10 @@ struct LCAppBanner : View {
 
         if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath!)") {
             _customDisplayName = State(initialValue: _tempDispName)
-            displayNameEdited = true
+            _displayNameEdited = State(initialValue: true)
         } else {
             _customDisplayName = State(initialValue: appModel.appInfo.displayName())
+            _displayNameEdited = State(initialValue: false)
         }
     }
     @State private var mainHueColor: CGFloat? = nil
