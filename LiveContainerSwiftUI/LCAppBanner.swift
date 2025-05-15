@@ -41,7 +41,7 @@ struct LCAppBanner : View {
 
     @State var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
-    @State var displayNameEdited: Bool
+    @State var displayNameEdited: Bool = false
     @FocusState private var displayNameTextFieldFocus: Bool
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
