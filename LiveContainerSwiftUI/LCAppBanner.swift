@@ -272,9 +272,14 @@ struct LCAppBanner : View {
                         Label("Edit Display Name", systemImage: "pencil.and.ellipsis.rectangle")
                     }
                     Button {
+                        openAppDataManager()
+                    } label: {
+                        Label("Manage Data", systemImage: "pencil.and.ellipsis.rectangle")
+                    }
+                    Button {
                         openSettings()
                     } label: {
-                        Label("Advances...", systemImage: "gear")
+                        Label("Advanced...", systemImage: "gear")
                     }
                 } label: {
                     Label("lc.tabView.settings".loc, systemImage: "gear")
@@ -456,6 +461,11 @@ struct LCAppBanner : View {
     
     func openSettings() {
         delegate.openNavigationView(view: AnyView(LCAppSettingsView(model: model, appDataFolders: $appDataFolders, tweakFolders: $tweakFolders, customDisplayName: $customDisplayName, displayNameEdited: $displayNameEdited)))
+    }
+    
+    
+    func openAppDataManager() {
+        delegate.openNavigationView(view: AnyView(LCAppDataManagerView(appModel: model, appDataFolders: $appDataFolders, appName: $customDisplayName)))
     }
     
     

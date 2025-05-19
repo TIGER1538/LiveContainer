@@ -8,3 +8,4 @@ Resources/Frameworks/OpenSSL.framework
 .vscode/
 package/
 build/
+LiveContainerSwiftUI/test.swift
