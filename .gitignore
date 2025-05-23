@@ -10,3 +10,4 @@ package/
 build/
 LiveContainerSwiftUI/test.swift
 upload.sh
+change_ver.sh
