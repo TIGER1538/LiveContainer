@@ -465,7 +465,7 @@ struct LCAppBanner : View {
     
     
     func openAppDataManager() {
-        delegate.openNavigationView(view: AnyView(LCAppDataManagerView(appModel: model, appDataFolders: $appDataFolders, appName: $customDisplayName)))
+        //delegate.openNavigationView(view: AnyView(LCAppDataManagerView(appModel: model, appDataFolders: $appDataFolders, appName: $customDisplayName)))
     }
     
     

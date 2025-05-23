@@ -9,3 +9,4 @@ Resources/Frameworks/OpenSSL.framework
 package/
 build/
 LiveContainerSwiftUI/test.swift
+upload.sh
