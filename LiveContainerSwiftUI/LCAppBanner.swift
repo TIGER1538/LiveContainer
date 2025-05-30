@@ -38,7 +38,7 @@ struct LCAppBanner : View {
     @State private var mainColor : Color
     
     @EnvironmentObject private var sharedModel : SharedModel
-
+    
     @State var customDisplayName: String = ""
     @State private var editDisplayName: Bool = false
     @State var displayNameEdited: Bool = false
@@ -53,7 +53,7 @@ struct LCAppBanner : View {
         _model = ObservedObject(wrappedValue: appModel)
         _mainColor = State(initialValue: Color.clear)
         _mainColor = State(initialValue: extractMainHueColor())
-
+        
         if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath!)") {
             _customDisplayName = State(initialValue: _tempDispName)
             _displayNameEdited = State(initialValue: true)
@@ -63,11 +63,14 @@ struct LCAppBanner : View {
         }
     }
     @State private var mainHueColor: CGFloat? = nil
-
+    
     //variables for custom webclip
     @State private var showCustomWCSheet: Bool = false
     @State private var WCSelectedContainerIndex: Int = 0
     @State private var WCCustomDisplayName: String = ""
+    
+    @State private var showDataFolderSelectionSheet: Bool = false
+    @State private var DSSelectedContainerIndex: Int = 0
     
     var body: some View {
 
@@ -75,9 +78,8 @@ struct LCAppBanner : View {
             HStack {
                 Image(uiImage: appInfo.icon())
                     .resizable().resizable().frame(width: 60, height: 60)
-                    .clipShape(RoundedRectangle(cornerSize: CGSize(width:12, height: 12)))
-                    
-
+                    .clipShape(RoundedRectangle(cornerSize: CGSize(width:12, height: 12))
+                )
                 VStack (alignment: .leading, content: {
                     HStack {
                         if editDisplayName {
@@ -103,7 +105,7 @@ struct LCAppBanner : View {
                                 .frame(width: 100)
                                 .focused($displayNameTextFieldFocus)
                             }
-                        } else { 
+                        } else {
                             Text(customDisplayName).font(.system(size: 16)).bold()
                         }
                         if displayNameEdited {
@@ -272,9 +274,9 @@ struct LCAppBanner : View {
                         Label("Edit Display Name", systemImage: "pencil.and.ellipsis.rectangle")
                     }
                     Button {
-                        openAppDataManager()
+                        showDataFolderSelectionSheet.toggle()
                     } label: {
-                        Label("Manage Data", systemImage: "pencil.and.ellipsis.rectangle")
+                        Label("Manage Data", systemImage: "folder.fill.badge.gearshape")
                     }
                     Button {
                         openSettings()
@@ -287,7 +289,7 @@ struct LCAppBanner : View {
                 
                 if !model.uiIsShared {
                     Button(role: .destructive) {
-                         Task{ await uninstall() }
+                        Task{ await uninstall() }
                     } label: {
                         Label("lc.appBanner.uninstall".loc, systemImage: "trash")
                     }
@@ -340,7 +342,10 @@ struct LCAppBanner : View {
         }
 
         .sheet(isPresented: $showCustomWCSheet) {
-            customACModal
+            customACModal()
+        }
+        .sheet(isPresented: $showDataFolderSelectionSheet) {
+            DSModal()
         }
     }
     
@@ -385,8 +390,8 @@ struct LCAppBanner : View {
             }
         }
     }
-
-    var customACModal: some View {
+    
+    func customACModal() -> some View {
         NavigationView {
             Form {
                 Section {
@@ -423,8 +428,8 @@ struct LCAppBanner : View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        openSafariViewToCreateAppClip(containerId: model.uiContainers[WCSelectedContainerIndex].folderName, displayName: WCCustomDisplayName)
                         self.showCustomWCSheet.toggle()
+                        openSafariViewToCreateAppClip(containerId: model.uiContainers[WCSelectedContainerIndex].folderName, displayName: WCCustomDisplayName)
                     } label: {
                         Text("lc.appBanner.executeCreation".loc)
                     }
@@ -433,6 +438,58 @@ struct LCAppBanner : View {
         }
     }
     
+    @State private var defaultContainerIndex: Int?
+    func DSModal() -> some View {
+        //TODO: impl loc
+        NavigationView {
+            Form {
+                if model.uiContainers.isEmpty {
+                    Text("No data folders found.")
+                } else {
+                    Section {
+                        Picker("", selection: $DSSelectedContainerIndex) {
+                            ForEach(model.uiContainers.indices, id:\.self) { i in
+                                if model.uiContainers[i].folderName == model.uiDefaultDataFolder {
+                                    if #available(iOS 17.0, *) {
+                                        (Text("\(model.uiContainers[i].name) ").foregroundStyle(Color.gray) + Text("[default]").foregroundStyle(Color.green))
+                                            .disabled(true)
+                                            .onAppear {
+                                                defaultContainerIndex = i
+                                            }
+                                    }
+                                } else {
+                                    Text(model.uiContainers[i].name)
+                                }
+                            }
+                        }
+                        .pickerStyle(.inline)
+                    } header: {
+                        Text("select target data container")
+                    }
+                    .textCase(nil)
+                    .labelsHidden()
+                }
+            }
+            .navigationTitle(customDisplayName)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("lc.common.cancel".loc, role: .cancel) {
+                        self.showDataFolderSelectionSheet.toggle()
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        self.showDataFolderSelectionSheet.toggle()
+                        delegate.openNavigationView(view: AnyView(LCAppDataManagerView(appModel: model, appName: $customDisplayName, baseDataFolder: model.uiDefaultDataFolder!, distinationDataFolder: model.uiContainers[DSSelectedContainerIndex].containerURL.path)))
+                    } label: {
+                        Text("Next")
+                    }
+                    .disabled(defaultContainerIndex == nil || DSSelectedContainerIndex == defaultContainerIndex)
+                }
+            }
+        }
+    }
+
     func handleOnAppear() {
         model.jitAlert = jitAlert
     }
@@ -461,11 +518,6 @@ struct LCAppBanner : View {
     
     func openSettings() {
         delegate.openNavigationView(view: AnyView(LCAppSettingsView(model: model, appDataFolders: $appDataFolders, tweakFolders: $tweakFolders, customDisplayName: $customDisplayName, displayNameEdited: $displayNameEdited)))
-    }
-    
-    
-    func openAppDataManager() {
-        //delegate.openNavigationView(view: AnyView(LCAppDataManagerView(appModel: model, appDataFolders: $appDataFolders, appName: $customDisplayName)))
     }
     
     
