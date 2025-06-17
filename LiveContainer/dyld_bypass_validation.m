@@ -121,21 +121,12 @@ static void* hooked_mmap(void *addr, size_t len, int prot, int flags, int fd, of
 
 static int hooked___fcntl(int fildes, int cmd, void *param) {
     if (cmd == F_ADDFILESIGS_RETURN) {
-        char filePath[PATH_MAX];
-        bzero(filePath, PATH_MAX);
-        
-        // Check if the file is our "in-memory" file
-        if (__fcntl(fildes, F_GETPATH, filePath) != -1) {
-            const char *homeDir = getenv("LC_HOME_PATH");
-            if (!strncmp(filePath, homeDir, strlen(homeDir))) {
-                fsignatures_t *fsig = (fsignatures_t*)param;
-                // called to check that cert covers file.. so we'll make it cover everything ;)
-                fsig->fs_file_start = 0xFFFFFFFF;
-                return 0;
-            }
-        }
+        fsignatures_t *fsig = (fsignatures_t*)param;
+        // called to check that cert covers file.. so we'll make it cover everything ;)
+        fsig->fs_file_start = 0xFFFFFFFF;
+        return 0;
     }
-    
+
     // Signature sanity check by dyld
     else if (cmd == F_CHECK_LV) {
         // Just say everything is fine

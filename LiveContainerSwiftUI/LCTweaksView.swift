@@ -32,6 +32,8 @@ struct LCTweakFolderView : View {
     @State private var choosingTweak = false
     
     @State private var isTweakSigning = false
+
+    @State private var tweakListId = UUID()
     
     init(baseUrl: URL, isRoot: Bool = false, tweakFolders: Binding<[String]>) {
         _baseUrl = State(initialValue: baseUrl)
@@ -100,6 +102,7 @@ struct LCTweakFolderView : View {
                     deleteTweakItem(indexSet: indexSet)
                 }
             }
+            .id(tweakListId)
             Section {
                 VStack{
                     if isRoot {
@@ -121,6 +124,14 @@ struct LCTweakFolderView : View {
         }
         .navigationTitle(isRoot ? "lc.tabView.tweaks".loc : baseUrl.lastPathComponent)
         .toolbar {
+            // TODO: impl loc
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    tweakListId = UUID()
+                } label: {
+                    Label("refresh", systemImage: "arrow.2.circlepath")
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 if !isTweakSigning && LCUtils.certificatePassword() != nil {
                     Button {

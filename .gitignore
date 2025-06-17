@@ -5,3 +5,9 @@ packages/
 *.xccheckout
 xcuserdata
 Resources/Frameworks/OpenSSL.framework
+.vscode/
+package/
+build/
+LiveContainerSwiftUI/test.swift
+upload.sh
+change_ver.sh

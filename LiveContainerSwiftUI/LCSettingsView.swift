@@ -47,6 +47,7 @@ struct LCSettingsView: View {
     @AppStorage("LCSwitchAppWithoutAsking") var silentSwitchApp = false
     @AppStorage("LCOpenWebPageWithoutAsking") var silentOpenWebPage = false
     @AppStorage("LCDontSignApp", store: LCUtils.appGroupUserDefault) var dontSignApp = false
+    @AppStorage("LCForceToUseEnglish", store: LCUtils.appGroupUserDefault) var forceToUseEnglish = false
     @AppStorage("LCStrictHiding", store: LCUtils.appGroupUserDefault) var strictHiding = false
     @AppStorage("dynamicColors") var dynamicColors = true
     
@@ -125,7 +126,7 @@ struct LCSettingsView: View {
                         Text("lc.settings.jitLessDesc".loc)
                     }
                 }
-                if store != .Unknown {
+                if store != .Unknown || LCUtils.isAppGroupAltStoreLike() {
                     Section{
                         Button {
                             Task { await installAnotherLC() }
@@ -239,7 +240,17 @@ struct LCSettingsView: View {
                 } footer: {
                     Text("lc.settings.dontSignDesc".loc)
                 }
-                    
+
+                 Section {
+                     Toggle(isOn: $forceToUseEnglish) {
+                         Text("lc.settings.forceToUseEnglishButton".loc)
+                     }
+                } header: {
+                    Text("lc.settings.forceToUseEnglishTitle".loc)
+                } footer: {
+                    Text("lc.settings.forceToUseEnglishDesc".loc)
+                }
+                
                 Section {
                     NavigationLink {
                         LCDataManagementView(appDataFolderNames: $appDataFolderNames)

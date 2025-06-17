@@ -51,6 +51,9 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
     
     @EnvironmentObject private var sharedModel : SharedModel
 
+    @State private var sharedAppListId = UUID()
+    @State private var hiddenSharedAppListId = UUID()
+
     init(appDataFolderNames: Binding<[String]>, tweakFolderNames: Binding<[String]>) {
         _installOptions = State(initialValue: [])
         _appDataFolderNames = appDataFolderNames
@@ -93,6 +96,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                     .transition(.scale)
                     
                 }
+                .id(sharedAppListId)
                 .padding()
                 .animation(.easeInOut, value: sharedModel.apps)
 
@@ -109,6 +113,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                                     LCAppBanner(appModel: app, delegate: self, appDataFolders: $appDataFolderNames, tweakFolders: $tweakFolderNames)
                                 }
                             }
+                            .id(hiddenSharedAppListId)
                             .padding()
                             .transition(.opacity)
                             .animation(.easeInOut, value: sharedModel.apps)
@@ -137,6 +142,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                                 Task { await authenticateUser() }
                             }
                         }
+                        .id(hiddenSharedAppListId)
                         .padding()
                         .animation(.easeInOut, value: sharedModel.apps)
                     }
@@ -190,7 +196,16 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                         helpPresent = true
                     }
                 }
-                
+
+                // TODO: impl loc
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        sharedAppListId = UUID()
+                        hiddenSharedAppListId = UUID()
+                    } label: {
+                        Label("refresh", systemImage: "arrow.2.circlepath")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("lc.appList.openLink".loc, systemImage: "link", action: {
                         Task { await onOpenWebViewTapped() }
