@@ -411,6 +411,7 @@ struct LCAppBanner : View {
                                 Text(model.uiContainers[i].name)
                             }
                         }
+                        
                     }
                     .pickerStyle(.inline)
                 } header: {
