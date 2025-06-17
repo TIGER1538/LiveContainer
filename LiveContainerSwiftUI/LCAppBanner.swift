@@ -38,6 +38,11 @@ struct LCAppBanner : View {
     @State private var mainColor : Color
     
     @EnvironmentObject private var sharedModel : SharedModel
+
+    @State var customDisplayName: String = ""
+    @State private var editDisplayName: Bool = false
+    @State var displayNameEdited: Bool = false
+    @FocusState private var displayNameTextFieldFocus: Bool
     
     init(appModel: LCAppModel, delegate: LCAppBannerDelegate, appDataFolders: Binding<[String]>, tweakFolders: Binding<[String]>) {
         _appInfo = State(initialValue: appModel.appInfo)
@@ -48,8 +53,21 @@ struct LCAppBanner : View {
         _model = ObservedObject(wrappedValue: appModel)
         _mainColor = State(initialValue: Color.clear)
         _mainColor = State(initialValue: extractMainHueColor())
+
+        if let _tempDispName = (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).string(forKey: "LCCustomDisplayName_\(appModel.appInfo.relativeBundlePath!)") {
+            _customDisplayName = State(initialValue: _tempDispName)
+            _displayNameEdited = State(initialValue: true)
+        } else {
+            _customDisplayName = State(initialValue: appModel.appInfo.displayName())
+            _displayNameEdited = State(initialValue: false)
+        }
     }
     @State private var mainHueColor: CGFloat? = nil
+
+    //variables for custom webclip
+    @State private var showCustomWCSheet: Bool = false
+    @State private var WCSelectedContainerIndex: Int = 0
+    @State private var WCCustomDisplayName: String = ""
     
     var body: some View {
 
@@ -62,7 +80,41 @@ struct LCAppBanner : View {
 
                 VStack (alignment: .leading, content: {
                     HStack {
-                        Text(appInfo.displayName()).font(.system(size: 16)).bold()
+                        if editDisplayName {
+                            // TODO: impl loc
+                            if #available(iOS 16.0, *){
+                                TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
+                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
+                                    editDisplayName.toggle()
+                                    displayNameEdited = true
+                                })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .font(.system(size: 16)).bold()
+                                .frame(width: 100)
+                                .focused($displayNameTextFieldFocus)
+                            } else {
+                                TextField("lc.appBanner.displayNameTextField", text: $customDisplayName, onCommit: {
+                                    (UserDefaults(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard).set(customDisplayName, forKey: "LCCustomDisplayName_\(appInfo.relativeBundlePath!)")
+                                    editDisplayName.toggle()
+                                    displayNameEdited = true
+                                })
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .font(.system(size: 16))
+                                .frame(width: 100)
+                                .focused($displayNameTextFieldFocus)
+                            }
+                        } else { 
+                            Text(customDisplayName).font(.system(size: 16)).bold()
+                        }
+                        if displayNameEdited {
+                            Image(systemName: "pencil.and.ellipsis.rectangle")
+                                .font(.system(size: 8))
+                                .foregroundColor(.black)
+                                .frame(width: 16, height:16)
+                                .background(
+                                    Capsule().fill(Color(.cyan))
+                                )
+                        }
                         if model.uiIsShared {
                             Image(systemName: "arrowshape.turn.up.left.fill")
                                 .font(.system(size: 8))
@@ -212,7 +264,7 @@ struct LCAppBanner : View {
                 }
                 Menu {
                     Button {
-                        openSafariViewToCreateAppClip()
+                        openSafariViewToCreateAppClip(containerId: nil, displayName: nil)
                     } label: {
                         Label("lc.appBanner.createAppClip".loc, systemImage: "appclip")
                     }
@@ -226,18 +278,38 @@ struct LCAppBanner : View {
                     } label: {
                         Label("lc.appBanner.saveAppIcon".loc, systemImage: "square.and.arrow.down")
                     }
-
-
+                    Button {
+                        WCCustomDisplayName = appInfo.displayName()!
+                        self.showCustomWCSheet.toggle()
+                    } label: {
+                        Label("lc.appBanner.customAppClip".loc, systemImage: "pencil")
+                    }
+                    
                 } label: {
                     Label("lc.appBanner.addToHomeScreen".loc, systemImage: "plus.app")
                 }
-                
-                Button {
-                    openSettings()
+
+                // TODO: impl loc
+                Menu {
+                    Button {
+                        editDisplayName.toggle()
+                        displayNameTextFieldFocus.toggle()
+                    } label: {
+                        Label("Edit Display Name", systemImage: "pencil.and.ellipsis.rectangle")
+                    }
+                    Button {
+                        openAppDataManager()
+                    } label: {
+                        Label("Manage Data", systemImage: "pencil.and.ellipsis.rectangle")
+                    }
+                    Button {
+                        openSettings()
+                    } label: {
+                        Label("Advanced...", systemImage: "gear")
+                    }
                 } label: {
                     Label("lc.tabView.settings".loc, systemImage: "gear")
                 }
-
                 
                 if !model.uiIsShared {
                     Button(role: .destructive) {
@@ -284,6 +356,106 @@ struct LCAppBanner : View {
             Text(errorInfo)
         }
         
+        .onChange(of: jitAlert.show) { newValue in
+            sharedModel.isJITModalOpen = newValue
+        }
+
+        .sheet(isPresented: $showCustomWCSheet) {
+            customACModal
+        }
+    }
+    
+    var JITEnablingModal : some View {
+        NavigationView {
+            ScrollViewReader { proxy in
+                ScrollView {
+                    Text("lc.appBanner.waitForJitMsg".loc)
+                        .padding(.vertical)
+                        .id(0)
+                    
+                    HStack {
+                        Text(model.jitLog)
+                            .font(.system(size: 12).monospaced())
+                            .fixedSize(horizontal: false, vertical: false)
+                            .textSelection(.enabled)
+                        Spacer()
+                    }
+                    
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal)
+                .onAppear {
+                    proxy.scrollTo(0)
+                }
+            }
+            .navigationTitle("lc.appBanner.waitForJitTitle".loc)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("lc.common.cancel".loc, role: .cancel) {
+                        jitAlert.close(result: false)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        jitAlert.close(result: true)
+                    } label: {
+                        Text("lc.appBanner.jitLaunchNow".loc)
+                    }
+                }
+            }
+        }
+    }
+
+    var customACModal: some View {
+        NavigationView {
+            Form {
+                Section {
+                    TextField("lc.appBanner.displayNameTextField".loc, text: $WCCustomDisplayName)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                } header: {
+                    Text("lc.appBanner.displayName".loc)
+                }
+                .textCase(nil)
+            
+                Section {
+                    Picker("", selection: $WCSelectedContainerIndex) {
+                        ForEach(model.uiContainers.indices, id:\.self) { i in
+                            if (model.uiContainers[i].folderName == model.uiDefaultDataFolder) {
+                                Text("\(model.uiContainers[i].name) ") + Text("[default]").foregroundColor(Color.green)
+                            } else {
+                                Text(model.uiContainers[i].name)
+                            }
+                        }
+                    }
+                    .pickerStyle(.inline)
+                } header: {
+                    Text("lc.appBanner.dataFolderHeader".loc)
+                }
+                .textCase(nil)
+                .labelsHidden()
+            }
+            .navigationTitle("lc.appBanner.customACModalTitle".loc)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("lc.common.cancel".loc, role: .cancel) {
+                        self.showCustomWCSheet.toggle()
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        openSafariViewToCreateAppClip(containerId: model.uiContainers[WCSelectedContainerIndex].folderName, displayName: WCCustomDisplayName)
+                        self.showCustomWCSheet.toggle()
+                    } label: {
+                        Text("lc.appBanner.executeCreation".loc)
+                    }
+                }
+            }
+        }
+    }
+    
+    func handleOnAppear() {
+        model.jitAlert = jitAlert
     }
     
     func runApp(multitask: Bool) async {
@@ -309,7 +481,12 @@ struct LCAppBanner : View {
 
     
     func openSettings() {
-        delegate.openNavigationView(view: AnyView(LCAppSettingsView(model: model, appDataFolders: $appDataFolders, tweakFolders: $tweakFolders)))
+        delegate.openNavigationView(view: AnyView(LCAppSettingsView(model: model, appDataFolders: $appDataFolders, tweakFolders: $tweakFolders, customDisplayName: $customDisplayName, displayNameEdited: $displayNameEdited)))
+    }
+    
+    
+    func openAppDataManager() {
+        //delegate.openNavigationView(view: AnyView(LCAppDataManagerView(appModel: model, appDataFolders: $appDataFolders, appName: $customDisplayName)))
     }
     
     
@@ -369,16 +546,22 @@ struct LCAppBanner : View {
         
     }
     
-    func openSafariViewToCreateAppClip() {
+
+    func openSafariViewToCreateAppClip(containerId: String?, displayName: String?) {
         do {
-            let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName)!, format: .xml, options: 0)
-            delegate.installMdm(data: data)
-        } catch  {
+            if let _containerId = containerId {
+                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: _containerId, displayName: displayName)!, format: .xml, options: 0)
+                delegate.installMdm(data: data)
+            } else {
+                let data = try PropertyListSerialization.data(fromPropertyList: appInfo.generateWebClipConfig(withContainerId: model.uiSelectedContainer?.folderName, displayName: displayName)!, format: .xml, options: 0)
+                delegate.installMdm(data: data)
+            }
+        } catch {
             errorShow = true
             errorInfo = error.localizedDescription
         }
-
     }
+    
     
     func saveIcon() {
         let img = appInfo.generateLiveContainerWrappedIcon()!

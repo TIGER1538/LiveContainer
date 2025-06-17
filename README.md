@@ -20,6 +20,21 @@
 >[!Note]
 It’s recommended to follow the following steps to set up JIT-Less mode for using LiveContainer without JIT. If you encounter any issues, please review #265 first before reporting them.
 
+## How does it differ from the original repo?
+This repository aims to implement features such as language selection and the ability to create WebClips with user customizations, including data folder selection, custom display names, and more! You can view the changes I made in the [InDev branch](https://github.com/TIGER1538/LiveContainer/tree/InDev), and the IPA files are available in the [Actions tab](https://github.com/TIGER1538/LiveContainer/actions) or [nightly release](https://github.com/TIGER1538/LiveContainer/releases/tag/nightly).
+- WebClip
+  - Data folder selection
+  - Custom WebClip Name
+- Setting
+  - Set default language to English swich
+  - Custom display name in App List
+## Usage
+Requires AltStore or SideStore
+- Download methods: [AltStore Source](https://tinyurl.com/LCAltStoreClassic), [SideStore Source](https://tinyurl.com/LCSideStore), the latest IPA [here](https://github.com/LiveContainer/LiveContainer/releases/latest), or the latest nightly IPA [here](https://github.com/LiveContainer/LiveContainer/releases/tag/nightly)
+- It is recommended to setup JIT-Less mode, in which LiveContainer signs your apps with certificate from SideStore/AltStore, see the instructions below.
+- Open LiveContainer, tap the plus icon in the upper right hand corner and select IPA files to install.
+- Choose the app you want to open in the next launch.
+- You can long-press the app to manage it.
 
 # Installation
 
@@ -198,6 +213,8 @@ Open Xcode, edit `DEVELOPMENT_TEAM[config=Debug]` in `xcconfigs/Global.xcconfig`
 
 ## TODO
 - Use ChOma instead of custom MachO parser
+- Refreash App list and Tweak list
+- Custom App name in AppListView
 
 ## License
 [Apache License 2.0](https://github.com/khanhduytran0/LiveContainer/blob/main/LICENSE)

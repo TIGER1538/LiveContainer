@@ -75,6 +75,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
     @State private var helpPresent = false
     
     @EnvironmentObject private var sharedModel : SharedModel
+
     @AppStorage("LCMultitaskMode", store: LCUtils.appGroupUserDefault) var multitaskMode: MultitaskMode = .virtualWindow
     @AppStorage("LCLaunchInMultitaskMode") var launchInMultitaskMode = false
     
@@ -99,7 +100,10 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
             }
         }
     }
-    
+
+    @State private var sharedAppListId = UUID()
+    @State private var hiddenSharedAppListId = UUID()
+
     init(appDataFolderNames: Binding<[String]>, tweakFolderNames: Binding<[String]>) {
         _installOptions = State(initialValue: [])
         _appDataFolderNames = appDataFolderNames
@@ -124,6 +128,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                     .transition(.scale)
                     
                 }
+                .id(sharedAppListId)
                 .padding()
                 .animation(searchContext.isTyping ? nil : .easeInOut, value: filteredApps)
 
@@ -140,6 +145,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                                     LCAppBanner(appModel: app, delegate: self, appDataFolders: $appDataFolderNames, tweakFolders: $tweakFolderNames)
                                 }
                             }
+                            .id(hiddenSharedAppListId)
                             .padding()
                             .transition(.opacity)
                             .animation(searchContext.isTyping ? nil : .easeInOut, value: filteredApps)
@@ -168,6 +174,7 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                                 Task { await authenticateUser() }
                             }
                         }
+                        .id(hiddenSharedAppListId)
                         .padding()
                         .animation(searchContext.isTyping ? nil : .easeInOut, value: filteredApps)
                     }
@@ -222,7 +229,16 @@ struct LCAppListView : View, LCAppBannerDelegate, LCAppModelDelegate {
                         helpPresent = true
                     }
                 }
-                
+
+                // TODO: impl loc
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        sharedAppListId = UUID()
+                        hiddenSharedAppListId = UUID()
+                    } label: {
+                        Label("refresh", systemImage: "arrow.2.circlepath")
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("lc.appList.openLink".loc, systemImage: "link", action: {
                         Task { await onOpenWebViewTapped() }

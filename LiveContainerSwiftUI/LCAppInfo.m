@@ -215,12 +215,21 @@ uint32_t dyld_get_sdk_version(const struct mach_header* mh);
     return newIcon;
 }
 
-- (NSDictionary *)generateWebClipConfigWithContainerId:(NSString*)containerId {
+- (NSDictionary *)generateWebClipConfigWithContainerId:(NSString*)containerId DisplayName:(NSString*)displayName {
     NSString* appClipUrl;
+    NSString* _displayName = nil;
+    NSString* _bundleID = nil;
+    if (displayName) {
+        _displayName = displayName;
+    } else {
+        _displayName = self.displayName;
+    }
     if(containerId) {
         appClipUrl = [NSString stringWithFormat:@"livecontainer://livecontainer-launch?bundle-name=%@&container-folder-name=%@", self.bundlePath.lastPathComponent, containerId];
+        _bundleID = [NSString stringWithFormat:@"%@.%@", self.bundleIdentifier, containerId];
     } else {
         appClipUrl = [NSString stringWithFormat:@"livecontainer://livecontainer-launch?bundle-name=%@", self.bundlePath.lastPathComponent];
+        _bundleID = self.bundleIdentifier;
     }
     
     NSDictionary *payload = @{
@@ -228,10 +237,10 @@ uint32_t dyld_get_sdk_version(const struct mach_header* mh);
         @"Icon": UIImagePNGRepresentation(self.generateLiveContainerWrappedIcon),
         @"IgnoreManifestScope": @YES,
         @"IsRemovable": @YES,
-        @"Label": self.displayName,
+        @"Label": _displayName,
         @"PayloadDescription": [NSString stringWithFormat:@"Web Clip for launching %@ (%@) in LiveContainer", self.displayName, self.bundlePath.lastPathComponent],
-        @"PayloadDisplayName": self.displayName,
-        @"PayloadIdentifier": self.bundleIdentifier,
+        @"PayloadDisplayName": _displayName,
+        @"PayloadIdentifier": _bundleID,
         @"PayloadType": @"com.apple.webClip.managed",
         @"PayloadUUID": NSUUID.UUID.UUIDString,
         @"PayloadVersion": @(1),
@@ -245,8 +254,8 @@ uint32_t dyld_get_sdk_version(const struct mach_header* mh);
         },
         @"PayloadContent": @[payload],
         @"PayloadDescription": payload[@"PayloadDescription"],
-        @"PayloadDisplayName": self.displayName,
-        @"PayloadIdentifier": self.bundleIdentifier,
+        @"PayloadDisplayName": _displayName,
+        @"PayloadIdentifier": _bundleID,
         @"PayloadOrganization": @"LiveContainer",
         @"PayloadRemovalDisallowed": @(NO),
         @"PayloadType": @"Configuration",

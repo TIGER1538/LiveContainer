@@ -452,6 +452,23 @@
         }
       }
     },
+    "lc.appBanner.customAppClip" : {
+    "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create Custom App Clip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムAppClipを作成"
+          }
+        }
+      }
+    },
     "lc.appBanner.deleteDataMsg %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1330,6 +1347,91 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在等待JIT"
+          }
+        }
+      }
+    },
+    "lc.appBanner.customACModalTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom WebClip"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "カスタムWebClipの作成"
+          }
+        }
+      }
+    },
+    "lc.appBanner.displayNameTextField" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Display Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示名を入力"
+          }
+        }
+      }
+    },
+    "lc.appBanner.displayName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Name"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表示名変更"
+          }
+        }
+      }
+    },
+    "lc.appBanner.dataFolderHeader" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a data folder"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データフォルダの選択"
+          }
+        }
+      }
+    },
+    "lc.appBanner.executeCreation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作成"
           }
         }
       }
@@ -5909,7 +6011,7 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Certificato ADP"
-          }
+            }
         },
         "ja" : {
           "stringUnit" : {
@@ -5945,6 +6047,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開發者證書"
+          }
+        }
+      }
+    },
+    "lc.settings.forceToUseEnglishTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "言語設定"
+          }
+        }
+      }
+    },
+    "lc.settings.forceToUseEnglishButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use English"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "英語をデフォルト言語として設定"
+          }
+        }
+      }
+    },
+    "lc.settings.forceToUseEnglishDesc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use English as the default language in LiveContainerUI."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "LiveContainer内での言語設定を英語に強制します。"
           }
         }
       }

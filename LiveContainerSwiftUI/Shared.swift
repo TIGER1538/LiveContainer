@@ -148,6 +148,9 @@ class InputHelper : AlertHelper<String> {
 extension String: @retroactive Error {}
 extension String: @retroactive LocalizedError {
     public var errorDescription: String? { return self }
+    private static let userDefaultsAppGroup: UserDefaults = {
+        UserDefaults.init(suiteName: LCUtils.appGroupID()) ?? UserDefaults.standard
+    }()
         
     private static var enBundle : Bundle? = {
         let language = "en"
@@ -155,11 +158,13 @@ extension String: @retroactive LocalizedError {
         let bundle = Bundle(path: path!)
         return bundle
     }()
-    
+
     var loc: String {
-        let message = NSLocalizedString(self, comment: "")
-        if message != self {
-            return message
+        if !Self.userDefaultsAppGroup.bool(forKey: "LCForceToUseEnglish") {
+            let message = NSLocalizedString(self, comment: "")
+            if message != self {
+                return message
+            }
         }
 
         if let forcedString = String.enBundle?.localizedString(forKey: self, value: nil, table: nil){
